@@ -12,7 +12,7 @@
             if (!channelSettings || (!channelSettings.channelUrl && !channelSettings.previewUrl)) {
                 channelSettings = {
                     previewUrl: DEFAULT_VIDEO_URL,
-                    channelName: '苺咲べりぃ / Ichigoberry',
+                    channelName: '苺咲べりぃ / Maisaki Berry',
                     channelUrl: 'https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ'
                 };
             }

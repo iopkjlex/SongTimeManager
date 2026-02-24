@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songs by Date - Song List Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-icon">🎵</span>
+                <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="import.html"><i class="fas fa-file-import"></i> <span class="nav-text" data-en="Import" data-ja="インポート">Import</span></a></li>
+                <li><a href="allsongs.html"><i class="fas fa-music"></i> <span class="nav-text" data-en="All Songs" data-ja="全曲">All Songs</span></a></li>
+                <li><a href="songs-by-date.html" class="active"><i class="fas fa-calendar-alt"></i> <span class="nav-text" data-en="By Date" data-ja="日付順">By Date</span></a></li>
+                <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
+                <li><a href="stream.html"><i class="fas fa-play-circle"></i> <span class="nav-text" data-en="Live Stream" data-ja="ライブ配信">Live Stream</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
+                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><span class="header-icon">📅</span> <span data-en="Songs by Date" data-ja="日付順">Songs by Date</span></h1>
+        </div>
+
+        <!-- Date Selection -->
+        <div class="card" style="margin-bottom: 25px;">
+            <div class="card-header">
+                <h2><i class="fas fa-filter"></i> <span data-en="Filter by Date" data-ja="日付で検索">Filter by Date</span></h2>
+            </div>
+            <div class="actions-bar">
+                <input type="date" id="dateFilter" class="filter-input" style="max-width: 200px;" onchange="renderSongsByDate()">
+                <button class="btn" onclick="document.getElementById('dateFilter').value = ''; renderSongsByDate();">
+                    <i class="fas fa-times"></i> <span data-en="Clear" data-ja="クリア">Clear</span>
+                </button>
+                <button class="btn" onclick="showAllDates()">
+                    <i class="fas fa-list"></i> <span data-en="Show All Dates" data-ja="全日付を表示">Show All Dates</span>
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Date List -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-list"></i> <span data-en="Song List" data-ja="曲リスト">Song List</span></h2>
+                <span class="date-badge">
+                    <i class="fas fa-music"></i> <span id="displayCount">0</span> <span data-en="songs" data-ja="曲">songs</span>
+                </span>
+            </div>
+            <div class="list-container" id="songsList">
+                <div class="empty-state">
+                    <i class="fas fa-calendar"></i>
+                    <p>Select a date to view songs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <style>
+        .song-type-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+    <script>
+        let showingAllDates = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSongsByDate();
+        });
+
+        function showAllDates() {
+            showingAllDates = true;
+            document.getElementById('dateFilter').value = '';
+            renderSongsByDate();
+        }
+
+        function renderSongsByDate() {
+            const selectedDate = document.getElementById('dateFilter').value;
+            const songs = getSongData();
+            const songsList = document.getElementById('songsList');
+            
+            // Reset showingAllDates if a specific date is selected
+            if (selectedDate) {
+                showingAllDates = false;
+            }
+            
+            // Get all entries with their dates
+            let allEntries = [];
+            Object.values(songs).forEach(song => {
+                if (song.entries && song.entries.length > 0) {
+                    song.entries.forEach(entry => {
+                        allEntries.push({
+                            name: song.name,
+                            nameEnglish: song.nameEnglish || entry.nameEnglish || '',
+                            singer: song.singer,
+                            singerEnglish: song.singerEnglish || entry.singerEnglish || '',
+                            songType: song.songType || entry.songType || '',
+                            duration: entry.duration,
+                            startTime: entry.startTime,
+                            endTime: entry.endTime,
+                            date: entry.date,
+                            sequence: entry.sequence || 0,
+                            addedDate: entry.addedDate
+                        });
+                    });
+                }
+            });
+
+            // Filter by selected date if any
+            let filteredEntries = allEntries;
+            if (selectedDate) {
+                filteredEntries = allEntries.filter(entry => entry.date === selectedDate);
+            }
+
+            // Get unique dates
+            const uniqueDates = [...new Set(allEntries.map(e => e.date))].filter(d => d).sort().reverse();
+
+            // Update display count
+            document.getElementById('displayCount').textContent = filteredEntries.length;
+
+            if (filteredEntries.length === 0) {
+                songsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar"></i>
+                        <p>${selectedDate ? 'No songs found on this date' : 'No songs imported yet'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show grouped by date when showing all dates or no date selected
+            if (!selectedDate) {
+                // Show grouped by date
+                const groupedByDate = {};
+                filteredEntries.forEach(entry => {
+                    const date = entry.date || 'Unknown';
+                    if (!groupedByDate[date]) {
+                        groupedByDate[date] = [];
+                    }
+                    groupedByDate[date].push(entry);
+                });
+
+                let html = '';
+                Object.keys(groupedByDate).sort().reverse().forEach(date => {
+                    // Sort entries by sequence
+                    const entries = groupedByDate[date].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+                    const uniqueSongs = [...new Set(entries.map(e => e.name))];
+                    
+                    html += `
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #00d9ff; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <i class="fas fa-calendar"></i> ${date} (${entries.length} entries, ${uniqueSongs.length} unique songs)
+                            </h3>
+                            ${entries.map(entry => `
+                                <div class="list-item">
+                                    <div class="list-item-sequence">#${entry.sequence || '-'}</div>
+                                    <div class="list-item-icon">
+                                        <span class="item-emoji">🎵</span>
+                                    </div>
+                                    <div class="list-item-info">
+                                        <div class="list-item-name">${entry.name}${entry.nameEnglish ? ` (${entry.nameEnglish})` : ''}${entry.songType ? ` <span class="song-type-badge">${entry.songType}</span>` : ''}</div>
+                                        <div class="list-item-meta">
+                                            <span><i class="fas fa-microphone"></i> ${entry.singer || 'Unknown'}${entry.singerEnglish ? ` (${entry.singerEnglish})` : ''}</span>
+                                            ${entry.duration ? `<span><i class="fas fa-clock"></i> ${entry.duration}</span>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                });
+                songsList.innerHTML = html;
+            } else {
+                // Sort by sequence for selected date
+                const sortedEntries = filteredEntries.sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+                
+                // Show songs for selected date
+                songsList.innerHTML = sortedEntries.map(entry => `
+                    <div class="list-item">
+                        <div class="list-item-sequence">#${entry.sequence || '-'}</div>
+                        <div class="list-item-icon">
+                            <span class="item-emoji">🎵</span>
+                        </div>
+                        <div class="list-item-info">
+                            <div class="list-item-name">${entry.name}${entry.nameEnglish ? ` (${entry.nameEnglish})` : ''}${entry.songType ? ` <span class="song-type-badge">${entry.songType}</span>` : ''}</div>
+                            <div class="list-item-meta">
+                                <span><i class="fas fa-microphone"></i> ${entry.singer || 'Unknown'}${entry.singerEnglish ? ` (${entry.singerEnglish})` : ''}</span>
+                                ${entry.duration ? `<span><i class="fas fa-clock"></i> ${entry.duration}</span>` : ''}
+                                <span><i class="fas fa-calendar"></i> ${entry.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    </script>
+</body>
+</html>

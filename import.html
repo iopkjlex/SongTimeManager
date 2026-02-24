@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Songs - Song List Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-icon">🎵</span>
+                <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="import.html" class="active"><i class="fas fa-file-import"></i> <span class="nav-text" data-en="Import" data-ja="インポート">Import</span></a></li>
+                <li><a href="allsongs.html"><i class="fas fa-music"></i> <span class="nav-text" data-en="All Songs" data-ja="全曲">All Songs</span></a></li>
+                <li><a href="songs-by-date.html"><i class="fas fa-calendar-alt"></i> <span class="nav-text" data-en="By Date" data-ja="日付順">By Date</span></a></li>
+                <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
+                <li><a href="stream.html"><i class="fas fa-play-circle"></i> <span class="nav-text" data-en="Live Stream" data-ja="ライブ配信">Live Stream</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
+                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><span class="header-icon">📥</span> <span data-en="Import Songs" data-ja="曲をインポート">Import Songs</span></h1>
+            
+            <!-- Global Date Input -->
+            <div class="form-group" style="margin-top: 15px; max-width: 300px;">
+                <label for="importDate">
+                    <i class="fas fa-calendar"></i> <span data-en="Import Date (applies to all)" data-ja="インポート日付 (一括適用)">Import Date (applies to all)</span>
+                </label>
+                <input type="date" id="importDate">
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Manual Import -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span class="card-icon">➕</span> <span data-en="Add Single Song" data-ja="单曲追加">Add Single Song</span></h2>
+                </div>
+
+                <form onsubmit="addSingleSong(event)">
+                    <div class="form-group">
+                        <label for="songName">
+                            <i class="fas fa-music"></i> <span data-en="Song Name (Japanese)" data-ja="曲名 (日本語)">Song Name (Japanese)</span> *
+                        </label>
+                        <input type="text" id="songName" data-en-placeholder="Enter song name in Japanese" data-ja-placeholder="曲名を入力" placeholder="Enter song name in Japanese" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="songNameEnglish">
+                            <i class="fas fa-music"></i> <span data-en="Song Name (English)" data-ja="曲名 (英語)">Song Name (English)</span>
+                        </label>
+                        <input type="text" id="songNameEnglish" data-en-placeholder="Enter song name in English" data-ja-placeholder="英語曲名を入力" placeholder="Enter song name in English (optional)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="songSinger">
+                            <i class="fas fa-microphone"></i> <span data-en="Singer (Japanese)" data-ja="歌手 (日本語)">Singer (Japanese)</span>
+                        </label>
+                        <input type="text" id="songSinger" data-en-placeholder="Enter singer name in Japanese" data-ja-placeholder="歌手名を入力" placeholder="Enter singer name in Japanese">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="songSingerEnglish">
+                            <i class="fas fa-microphone"></i> <span data-en="Singer (English)" data-ja="歌手 (英語)">Singer (English)</span>
+                        </label>
+                        <input type="text" id="songSingerEnglish" data-en-placeholder="Enter singer name in English" data-ja-placeholder="英語歌手名を入力" placeholder="Enter singer name in English (optional)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="songType">
+                            <i class="fas fa-tag"></i> <span data-en="Song Type" data-ja="曲タイプ">Song Type</span>
+                        </label>
+                        <div class="searchable-dropdown">
+                            <input type="text" id="songType" placeholder="Select or type new type..." autocomplete="off">
+                            <div class="dropdown-list" id="songTypeDropdown"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-clock"></i> <span data-en="Duration (Start ~ End)" data-ja="時間 (開始 ~ 終了)">Duration (Start ~ End)</span>
+                        </label>
+                        <div class="time-input-group">
+                            <input type="text" id="songStartTime" data-en-placeholder="00:06:15" data-ja-placeholder="00:06:15" placeholder="00:06:15">
+                            <span class="time-separator">~</span>
+                            <input type="text" id="songEndTime" data-en-placeholder="00:10:29" data-ja-placeholder="00:10:29" placeholder="00:10:29">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="songDate">
+                            <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
+                        </label>
+                        <input type="date" id="songDate">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-plus"></i> <span data-en="Add Song" data-ja="追加">Add Song</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Bulk Import -->
+            <div class="card" style="display: flex; flex-direction: column;">
+                <div class="card-header">
+                    <h2><span class="card-icon">📋</span> <span data-en="Bulk Import" data-ja="一括インポート">Bulk Import</span></h2>
+                </div>
+
+                <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+                    <label>
+                        <i class="fas fa-info-circle"></i> <span data-en="Format: Start ~ End | SongName(English) | Singer(English) | Date (Sequence is auto-assigned by date)" data-ja="形式: 開始時間 ~ 終了時間 | 曲名(英語) | 歌手名(英語) | 日付 (連番は自動付与)">Format: Start ~ End | SongName(English) | Singer(English) | Date (Sequence is auto-assigned by date)</span>
+                    </label>
+                    <textarea id="bulkInput" style="flex: 1; min-height: 200px;" data-en-placeholder="Enter songs (one per line):&#10;&#10;01:22:41 ~ 01:27:21 | 君色シグナル(Kimiiro Signal) | 春奈るな(haruna runa) | 2024-01-15&#10;01:27:22 ~ 01:31:45 | 青いベンチ(Aoi Bench) | Soprano | 2024-01-15" data-ja-placeholder="曲を入力 (1行に1曲):&#10;&#10;01:22:41 ~ 01:27:21 | 君色シグナル(Kimiiro Signal) | 春奈るな(haruna runa) | 2024-01-15&#10;01:27:22 ~ 01:31:45 | 青いベンチ(Aoi Bench) | Soprano | 2024-01-15" placeholder="Enter songs (one per line):&#10;&#10;01:22:41 ~ 01:27:21 | 君色シグナル(Kimiiro Signal) | 春奈るな(haruna runa) | 2024-01-15&#10;01:27:22 ~ 01:31:45 | 青いベンチ(Aoi Bench) | Soprano | 2024-01-15"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="addBulkSongs()" style="width: 100%; margin-top: 15px;">
+                    <i class="fas fa-plus"></i> <span data-en="Import All" data-ja="全てインポート">Import All</span> (<span id="bulkCount">0</span> <span data-en="songs" data-ja="曲">songs</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- File Import -->
+        <div class="card" style="margin-top: 25px;">
+            <div class="card-header">
+                <h2><span class="card-icon">📁</span> <span data-en="Import from File" data-ja="ファイルからインポート">Import from File</span></h2>
+            </div>
+
+            <div class="actions-bar">
+                <input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls" onchange="importFromFile(event)" style="display: none;">
+                <button class="btn" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-file-upload"></i> <span data-en="Choose File" data-ja="ファイルを選択">Choose File</span>
+                </button>
+                <button class="btn" onclick="downloadTemplate()">
+                    <i class="fas fa-download"></i> <span data-en="Download Template" data-ja="テンプレートダウンロード">Download Template</span>
+                </button>
+            </div>
+
+            <p style="color: #888; font-size: 0.9rem;">
+                <i class="fas fa-info-circle"></i> <span data-en="Supported formats: .txt, .csv, .xlsx" data-ja="対応形式: .txt, .csv, .xlsx">Supported formats: .txt, .csv, .xlsx</span><br>
+                <span data-en="Excel columns: Song Name (Japanese)*, Song Name (English), Singer (Japanese), Singer (English), Song Type, Start Time, End Time, Date (Sequence is auto-assigned)" data-ja="Excel列: 曲名(日本語)*, 曲名(英語), 歌手(日本語), 歌手(英語), 曲タイプ, 開始時間, 終了時間, 日付 (連番は自動付与)">Excel columns: Song Name (Japanese)*, Song Name (English), Singer (Japanese), Singer (English), Song Type, Start Time, End Time, Date (Sequence is auto-assigned)</span><br>
+                <span data-en="Text/CSV format: Start Time ~ End Time | Song Name | Singer | Song Type | Date (optional)" data-ja="テキスト/CSV形式: 開始時間 ~ 終了時間 | 曲名 | 歌手 | 曲タイプ | 日付 (任意)">Text/CSV format: Start Time ~ End Time | Song Name | Singer | Song Type | Date (optional)</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> <span data-en="Preview Import" data-ja="インポートプレビュー">Preview Import</span></h3>
+                <button class="modal-close" onclick="closePreviewModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: #888;">
+                    <span id="previewModalCount">0</span> <span data-en="songs to import" data-ja="曲がインポートされます">songs to import</span>
+                </p>
+                <div class="list-container" id="previewModalList" style="max-height: 300px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="cancelImport()">
+                    <i class="fas fa-times"></i> <span data-en="Cancel" data-ja="キャンセル">Cancel</span>
+                </button>
+                <button class="btn btn-primary" onclick="confirmImport()">
+                    <i class="fas fa-check"></i> <span data-en="Import All" data-ja="全てインポート">Import All</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Set default date to today for all date inputs
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('importDate').value = today;
+        document.getElementById('songDate').value = today;
+        
+        // Load preview on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPreview();
+            
+            // Update bulk count on input change
+            document.getElementById('bulkInput').addEventListener('input', updateBulkCount);
+            updateBulkCount();
+            
+            // Setup searchable song type dropdown
+            setupSongTypeDropdownImport();
+            
+            // Close modal when clicking outside
+            const modal = document.getElementById('previewModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    cancelImport();
+                }
+            });
+            
+            // Close modal on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closePreviewModal();
+                }
+            });
+        });
+
+        function updateBulkCount() {
+            const text = document.getElementById('bulkInput').value.trim();
+            if (text) {
+                const songs = parseSongsFromText(text);
+                document.getElementById('bulkCount').textContent = songs.length;
+            } else {
+                document.getElementById('bulkCount').textContent = '0';
+            }
+        }
+
+        function loadPreview() {
+            const songs = Object.values(getSongData());
+            const container = document.getElementById('previewList');
+            document.getElementById('previewCount').textContent = songs.length;
+
+            if (songs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-emoji">🎵</span>
+                        <p>Import songs to see preview</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = songs.map(song => `
+                <div class="list-item">
+                    <div class="list-item-icon">
+                        <span class="item-emoji">🎵</span>
+                    </div>
+                    <div class="list-item-info">
+                        <div class="list-item-name">${song.name}</div>
+                        <div class="list-item-meta">
+                            <span><i class="fas fa-microphone"></i> ${song.singer || 'Unknown'}</span>
+                            ${song.duration ? `<span><i class="fas fa-clock"></i> ${song.duration}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="list-item-count">${song.count}</div>
+                </div>
+            `).join('');
+        }
+
+        function addSingleSong(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('songName').value.trim();
+            const nameEnglish = document.getElementById('songNameEnglish').value.trim();
+            const singer = document.getElementById('songSinger').value.trim();
+            const singerEnglish = document.getElementById('songSingerEnglish').value.trim();
+            const songType = document.getElementById('songType').value;
+            const startTime = document.getElementById('songStartTime').value.trim();
+            const endTime = document.getElementById('songEndTime').value.trim();
+            // Use global date input (applies to all import functions)
+            const date = document.getElementById('importDate').value || document.getElementById('songDate').value;
+
+            // Create duration string
+            let duration = '';
+            if (startTime && endTime) {
+                duration = `${startTime} ~ ${endTime}`;
+            } else if (startTime) {
+                duration = startTime;
+            }
+
+            if (!name) {
+                alert('Please enter a song name');
+                return;
+            }
+
+            // Use provided sequence or generate new one
+            const finalSequence = sequence > 0 ? sequence : getNextSequence(date);
+
+            const songs = getSongData();
+            const key = `${name.toLowerCase()}_${singer.toLowerCase()}`;
+            
+            if (songs[key]) {
+                songs[key].count++;
+                songs[key].entries.push({
+                    id: Date.now() + Math.random(),
+                    name: name,
+                    nameEnglish: nameEnglish,
+                    singer: singer,
+                    singerEnglish: singerEnglish,
+                    songType: songType,
+                    duration: duration,
+                    startTime: startTime,
+                    endTime: endTime,
+                    date: date,
+                    sequence: finalSequence,
+                    addedDate: new Date().toISOString()
+                });
+                if (date && !songs[key].dates.includes(date)) {
+                    songs[key].dates.push(date);
+                }
+                // Update duration if provided
+                if (duration && !songs[key].duration) {
+                    songs[key].duration = duration;
+                }
+                // Update English names if provided
+                if (nameEnglish && !songs[key].nameEnglish) {
+                    songs[key].nameEnglish = nameEnglish;
+                }
+                if (singerEnglish && !songs[key].singerEnglish) {
+                    songs[key].singerEnglish = singerEnglish;
+                }
+            } else {
+                songs[key] = {
+                    id: Date.now(),
+                    name: name,
+                    nameEnglish: nameEnglish,
+                    singer: singer,
+                    singerEnglish: singerEnglish,
+                    songType: songType,
+                    duration: duration,
+                    startTime: startTime,
+                    endTime: endTime,
+                    date: date,
+                    dates: date ? [date] : [],
+                    count: 1,
+                    entries: [{
+                        id: Date.now(),
+                        name: name,
+                        nameEnglish: nameEnglish,
+                        singer: singer,
+                        singerEnglish: singerEnglish,
+                        songType: songType,
+                        duration: duration,
+                        startTime: startTime,
+                        endTime: endTime,
+                        date: date,
+                        sequence: finalSequence,
+                        addedDate: new Date().toISOString()
+                    }]
+                };
+            }
+
+            saveSongData(songs);
+            
+            // Refresh preview
+            loadPreview();
+            
+            // Reset form
+            document.getElementById('songName').value = '';
+            document.getElementById('songNameEnglish').value = '';
+            document.getElementById('songSinger').value = '';
+            document.getElementById('songSingerEnglish').value = '';
+            document.getElementById('songType').value = '';
+            document.getElementById('songStartTime').value = '';
+            document.getElementById('songEndTime').value = '';
+            // Keep global date, reset form date to match
+            document.getElementById('songDate').value = document.getElementById('importDate').value;
+
+            alert('Song added successfully!');
+        }
+
+        // Get next sequence number for a date
+        function getNextSequence(date) {
+            const sequences = JSON.parse(localStorage.getItem('songSequences')) || {};
+            if (!sequences[date]) {
+                sequences[date] = 0;
+            }
+            sequences[date]++;
+            localStorage.setItem('songSequences', JSON.stringify(sequences));
+            return sequences[date];
+        }
+
+        function addBulkSongs() {
+            const text = document.getElementById('bulkInput').value.trim();
+            
+            if (!text) {
+                alert('Please enter some songs to import');
+                return;
+            }
+
+            previewSongs = parseSongsFromText(text);
+            
+            if (previewSongs.length > 0) {
+                showPreviewModal(previewSongs);
+            } else {
+                alert('No valid songs found to import');
+            }
+        }
+
+        // Temporary storage for preview songs
+        let previewSongs = [];
+
+        function importFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileName = file.name.toLowerCase();
+            
+            // Check if it's an Excel file
+            if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+                importExcelFileForPreview(file);
+            } else {
+                // Handle text/csv files
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    previewSongs = parseSongsFromText(text);
+                    
+                    if (previewSongs.length > 0) {
+                        showPreviewModal(previewSongs);
+                    } else {
+                        alert('No valid songs found in the file');
+                    }
+                };
+                reader.readAsText(file, 'UTF-8');
+            }
+
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function parseSongsFromText(text) {
+            const lines = text.split(/\n/).map(s => s.trim()).filter(s => s);
+            const songs = [];
+            // Use global date input (applies to all import functions)
+            const importDate = document.getElementById('importDate').value || getTodayString();
+            
+            // Pattern: Start ~ End | SongName(EnglishName) | Singer(EnglishSinger) | Date
+            // Example: 01:22:41 ~ 01:27:21 | 君色シグナル(Kimiiro Signal) | 春奈るな(haruna runa) | 2024-01-15
+            const newPattern = /(\d{2}:\d{2}:\d{2})\s*~\s*(\d{2}:\d{2}:\d{2})\s*[|]\s*(.+?)\s*[(]([^)]+)[)]\s*[|]\s*(.+?)\s*[(]([^)]+)[)]\s*[|]?\s*(.*)/;
+            
+            // Old patterns for backward compatibility
+            const fullPattern = /(\d{2}:\d{2}:\d{2})\s*~\s*(\d{2}:\d{2}:\d{2})\s*[|]\s*(.+?)\s*[|]\s*(.+?)\s*[|]?\s*(.*)/;
+            const simplePattern = /(\d{2}:\d{2}:\d{2})\s*[|]\s*(.+?)\s*[|]\s*(.+?)\s*[|]?\s*(.*)/;
+            const setListPattern = /(\d{2}:\d{2}:\d{2}\s*~\s*\d{2}:\d{2}:\d{2})\s*[|]\s*(.+?)\s*[|]\s*(.+)/;
+            
+            lines.forEach(line => {
+                if (!line.trim()) return;
+                
+                // Try new pattern first: Start ~ End | Song(English) | Singer(English) | Date
+                const newMatch = line.match(newPattern);
+                if (newMatch) {
+                    const startTime = newMatch[1].trim();
+                    const endTime = newMatch[2].trim();
+                    const songName = newMatch[3].trim();
+                    const songNameEnglish = newMatch[4].trim();
+                    const singer = newMatch[5].trim();
+                    const singerEnglish = newMatch[6].trim();
+                    const date = newMatch[7] ? newMatch[7].trim() : importDate;
+                    
+                    const duration = `${startTime} ~ ${endTime}`;
+                    
+                    if (songName) {
+                        songs.push({ 
+                            name: songName, 
+                            nameEnglish: songNameEnglish,
+                            singer: singer, 
+                            singerEnglish: singerEnglish,
+                            duration: duration,
+                            startTime: startTime,
+                            endTime: endTime,
+                            date: date,
+                            sequence: 0
+                        });
+                    }
+                    return;
+                }
+                
+                // Try set list pattern
+                const setMatch = line.match(setListPattern);
+                if (setMatch) {
+                    const fullDuration = setMatch[1].trim();
+                    const songName = setMatch[2].trim();
+                    const singer = setMatch[3].trim();
+                    const date = importDate;
+                    
+                    if (songName) {
+                        songs.push({ 
+                            name: songName, 
+                            singer: singer, 
+                            duration: fullDuration,
+                            startTime: '',
+                            endTime: '',
+                            date: date,
+                            sequence: 0
+                        });
+                    }
+                    return;
+                }
+                
+                // Try full pattern with start ~ end time
+                const fullMatch = line.match(fullPattern);
+                if (fullMatch) {
+                    const startTime = fullMatch[1].trim();
+                    const endTime = fullMatch[2].trim();
+                    const songName = fullMatch[3].trim();
+                    const singer = fullMatch[4].trim();
+                    let date = fullMatch[5].trim() || importDate;
+                    
+                    const duration = `${startTime} ~ ${endTime}`;
+                    
+                    if (songName) {
+                        songs.push({ 
+                            name: songName, 
+                            singer: singer, 
+                            duration: duration,
+                            startTime: startTime,
+                            endTime: endTime,
+                            date: date,
+                            sequence: 0
+                        });
+                    }
+                    return;
+                }
+                
+                // Try simple pattern with single timestamp
+                const simpleMatch = line.match(simplePattern);
+                if (simpleMatch) {
+                    const startTime = simpleMatch[1].trim();
+                    const songName = simpleMatch[2].trim();
+                    const singer = simpleMatch[3].trim();
+                    let date = simpleMatch[4].trim() || importDate;
+                    
+                    if (songName) {
+                        songs.push({ 
+                            name: songName, 
+                            singer: singer, 
+                            duration: startTime,
+                            startTime: startTime,
+                            endTime: '',
+                            date: date,
+                            sequence: 0
+                        });
+                    }
+                    return;
+                }
+                
+                // Try simple comma/pipe separated format: Name, Singer, Date
+                const parts = line.split(/[,;|]+/).map(p => p.trim());
+                if (parts.length >= 2 && parts[0] && parts[1]) {
+                    const name = parts[0];
+                    const singer = parts[1] || '';
+                    const date = parts[2] || importDate;
+                    
+                    songs.push({ 
+                        name: name, 
+                        singer: singer, 
+                        duration: '',
+                        startTime: '',
+                        endTime: '',
+                        date: date,
+                        sequence: 0
+                    });
+                }
+            });
+            
+            return songs;
+        }
+
+        function importExcelFileForPreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get first sheet
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    // Convert to JSON (array of arrays)
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    previewSongs = [];
+                    
+                    // Use global date input
+                    const importDate = document.getElementById('importDate').value || getTodayString();
+                    
+                    // Column mapping (matching Add Single Song fields):
+                    // 0: Name (Japanese) - required
+                    // 1: Name (English)
+                    // 2: Singer (Japanese)
+                    // 3: Singer (English)
+                    // 4: Song Type
+                    // 5: Start Time
+                    // 6: End Time
+                    // 7: Date (Sequence is auto-assigned by date)
+                    
+                    // Skip first row (header)
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (!row || row.length === 0) continue;
+                        
+                        const name = String(row[0] || '').trim();
+                        if (!name) continue;
+                        
+                        const nameEnglish = String(row[1] || '').trim();
+                        const singer = String(row[2] || '').trim();
+                        const singerEnglish = String(row[3] || '').trim();
+                        const songType = String(row[4] || '').trim();
+                        const startTime = String(row[5] || '').trim();
+                        const endTime = String(row[6] || '').trim();
+                        // Sequence is auto-assigned, not from file
+                        const sequence = 0;
+                        const date = String(row[7] || '').trim() || importDate;
+                        
+                        // Create duration string
+                        let duration = '';
+                        if (startTime && endTime) {
+                            duration = `${startTime} ~ ${endTime}`;
+                        } else if (startTime) {
+                            duration = startTime;
+                        }
+                        
+                        previewSongs.push({ 
+                            name, 
+                            nameEnglish,
+                            singer, 
+                            singerEnglish,
+                            songType,
+                            duration,
+                            startTime,
+                            endTime,
+                            date,
+                            sequence
+                        });
+                    }
+                    
+                    if (previewSongs.length > 0) {
+                        showPreviewModal(previewSongs);
+                    } else {
+                        alert('No valid songs found in the Excel file');
+                    }
+                } catch (error) {
+                    console.error('Error reading Excel file:', error);
+                    alert('Error reading Excel file. Please make sure the file format is correct.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showPreviewModal(songs) {
+            const modal = document.getElementById('previewModal');
+            const listContainer = document.getElementById('previewModalList');
+            document.getElementById('previewModalCount').textContent = songs.length;
+            
+            listContainer.innerHTML = songs.map((song, index) => `
+                <div class="list-item">
+                    <div class="list-item-sequence">#${song.sequence || '-'}</div>
+                    <div class="list-item-icon">
+                        <span class="item-emoji">🎵</span>
+                    </div>
+                    <div class="list-item-info">
+                        <div class="list-item-name">${song.name}${song.nameEnglish ? ` (${song.nameEnglish})` : ''}</div>
+                        <div class="list-item-meta">
+                            <span><i class="fas fa-microphone"></i> ${song.singer || 'Unknown'}${song.singerEnglish ? ` (${song.singerEnglish})` : ''}</span>
+                            ${song.duration ? `<span><i class="fas fa-clock"></i> ${song.duration}</span>` : ''}
+                            <span><i class="fas fa-calendar"></i> ${song.date}</span>
+                            ${song.startTime ? `<span><i class="fas fa-play"></i> ${song.startTime}</span>` : ''}
+                            ${song.endTime ? `<span><i class="fas fa-stop"></i> ${song.endTime}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="list-item-actions">
+                        <button class="delete" onclick="removePreviewSong(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
+        }
+
+        function removePreviewSong(index) {
+            previewSongs.splice(index, 1);
+            showPreviewModal(previewSongs);
+            document.getElementById('previewModalCount').textContent = previewSongs.length;
+        }
+
+        function confirmImport() {
+            if (previewSongs.length === 0) {
+                alert('No songs to import');
+                return;
+            }
+            
+            const songs = getSongData();
+            let addedCount = 0;
+            
+            // Group songs by date to assign sequences
+            const songsByDate = {};
+            previewSongs.forEach((song, index) => {
+                const date = song.date || getTodayString();
+                if (!songsByDate[date]) {
+                    songsByDate[date] = [];
+                }
+                songsByDate[date].push({ ...song, originalIndex: index });
+            });
+            
+            // Assign sequences for each date (only if not provided)
+            Object.keys(songsByDate).forEach(date => {
+                let autoSeq = 0;
+                songsByDate[date].forEach((song) => {
+                    if (!song.sequence || song.sequence === 0) {
+                        autoSeq++;
+                        song.sequence = autoSeq;
+                    }
+                });
+            });
+            
+            // Flatten back and process
+            const songsWithSequence = [];
+            Object.keys(songsByDate).forEach(date => {
+                songsWithSequence.push(...songsByDate[date]);
+            });
+            
+            songsWithSequence.forEach(song => {
+                const key = `${song.name.toLowerCase()}_${song.singer.toLowerCase()}`;
+                
+                // Use provided sequence or get next auto sequence
+                const sequence = (song.sequence && song.sequence > 0) ? song.sequence : getNextSequence(song.date);
+                
+                if (songs[key]) {
+                    songs[key].count++;
+                    songs[key].entries.push({
+                        id: Date.now() + Math.random(),
+                        name: song.name,
+                        nameEnglish: song.nameEnglish || '',
+                        singer: song.singer,
+                        singerEnglish: song.singerEnglish || '',
+                        duration: song.duration,
+                        startTime: song.startTime,
+                        endTime: song.endTime,
+                        date: song.date,
+                        sequence: sequence,
+                        addedDate: new Date().toISOString()
+                    });
+                    if (song.date && !songs[key].dates.includes(song.date)) {
+                        songs[key].dates.push(song.date);
+                    }
+                    // Update duration if provided and not already set
+                    if (song.duration && !songs[key].duration) {
+                        songs[key].duration = song.duration;
+                    }
+                    // Update English names if provided
+                    if (song.nameEnglish && !songs[key].nameEnglish) {
+                        songs[key].nameEnglish = song.nameEnglish;
+                    }
+                    if (song.singerEnglish && !songs[key].singerEnglish) {
+                        songs[key].singerEnglish = song.singerEnglish;
+                    }
+                } else {
+                    songs[key] = {
+                        id: Date.now() + Math.random(),
+                        name: song.name,
+                        nameEnglish: song.nameEnglish || '',
+                        singer: song.singer,
+                        singerEnglish: song.singerEnglish || '',
+                        duration: song.duration,
+                        startTime: song.startTime,
+                        endTime: song.endTime,
+                        date: song.date,
+                        dates: song.date ? [song.date] : [],
+                        count: 1,
+                        entries: [{
+                            id: Date.now() + Math.random(),
+                            name: song.name,
+                            nameEnglish: song.nameEnglish || '',
+                            singer: song.singer,
+                            singerEnglish: song.singerEnglish || '',
+                            duration: song.duration,
+                            startTime: song.startTime,
+                            endTime: song.endTime,
+                            date: song.date,
+                            sequence: sequence,
+                            addedDate: new Date().toISOString()
+                        }]
+                    };
+                }
+                addedCount++;
+            });
+            
+            saveSongData(songs);
+            previewSongs = [];
+            closePreviewModal();
+            document.getElementById('bulkInput').value = '';
+            updateBulkCount();
+            loadPreview();
+            alert(`Successfully imported ${addedCount} songs!`);
+        }
+
+        function cancelImport() {
+            previewSongs = [];
+            closePreviewModal();
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        function downloadTemplate() {
+            // Template matching Add Single Song fields (Sequence is auto-assigned by import date)
+            const templateData = [
+                ['Song Name (Japanese) *', 'Song Name (English)', 'Singer (Japanese)', 'Singer (English)', 'Song Type', 'Start Time', 'End Time', 'Date'],
+                ['君色シグナル', 'Kimiiro Signal', '春奈るな', 'Haruna Runna', 'Opening', '01:22:41', '01:27:21', '2024-01-15'],
+                ['青いベンチ', 'Aoi Bench', 'Soprano', 'Soprano', 'Ending', '01:27:22', '01:31:45', '2024-01-15'],
+                ['テスト曲', 'Test Song', 'テスト歌手', 'Test Singer', 'Cover', '01:31:46', '01:35:30', '2024-01-15']
+            ];
+
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(templateData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Song Template');
+
+            // Download file
+            XLSX.writeFile(wb, 'song_template.xlsx');
+        }
+        
+        // Default song types
+        const defaultSongTypes = ['Opening', 'Ending', 'Insert Song', 'Cover', 'Original', 'Live', 'Other'];
+        
+        /**
+         * Get all song types from localStorage + defaults
+         */
+        function getSongTypesImport() {
+            const stored = JSON.parse(localStorage.getItem('customSongTypes')) || [];
+            return [...new Set([...defaultSongTypes, ...stored])].sort();
+        }
+        
+        /**
+         * Save custom song type to localStorage
+         */
+        function saveCustomSongTypeImport(type) {
+            if (!type.trim()) return;
+            const stored = JSON.parse(localStorage.getItem('customSongTypes')) || [];
+            if (!stored.includes(type)) {
+                stored.push(type);
+                localStorage.setItem('customSongTypes', JSON.stringify(stored));
+            }
+        }
+        
+        /**
+         * Setup searchable dropdown for song type in import.html
+         */
+        function setupSongTypeDropdownImport() {
+            const input = document.getElementById('songType');
+            const dropdown = document.getElementById('songTypeDropdown');
+            
+            // Show dropdown on focus
+            input.addEventListener('focus', function() {
+                filterSongTypeDropdownImport(input.value, dropdown);
+                dropdown.classList.add('show');
+            });
+            
+            // Filter on input
+            input.addEventListener('input', function() {
+                filterSongTypeDropdownImport(input.value, dropdown);
+            });
+            
+            // Close dropdown on outside click
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+        
+        /**
+         * Filter and display song type dropdown items in import.html
+         */
+        function filterSongTypeDropdownImport(query, dropdown) {
+            dropdown.innerHTML = '';
+            const types = getSongTypesImport();
+            const filtered = types.filter(type => 
+                type.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            // Check if query matches any existing type
+            const exactMatch = types.some(t => t.toLowerCase() === query.toLowerCase());
+            
+            // Add option to add new type if query doesn't match exactly
+            if (query.trim() && !exactMatch) {
+                const newItem = document.createElement('div');
+                newItem.className = 'dropdown-item dropdown-item-new';
+                newItem.innerHTML = '<i class="fas fa-plus"></i> Add "' + query + '"';
+                newItem.addEventListener('click', function() {
+                    saveCustomSongTypeImport(query);
+                    document.getElementById('songType').value = query;
+                    dropdown.classList.remove('show');
+                });
+                dropdown.appendChild(newItem);
+            }
+            
+            // Add "Clear" option
+            const clearItem = document.createElement('div');
+            clearItem.className = 'dropdown-item';
+            clearItem.textContent = '-- Clear --';
+            clearItem.addEventListener('click', function() {
+                document.getElementById('songType').value = '';
+                dropdown.classList.remove('show');
+            });
+            dropdown.appendChild(clearItem);
+            
+            filtered.forEach(type => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = type;
+                div.addEventListener('click', function() {
+                    document.getElementById('songType').value = type;
+                    dropdown.classList.remove('show');
+                });
+                dropdown.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>

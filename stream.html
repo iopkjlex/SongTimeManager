@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream - Song List Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/stream.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-icon">🎵</span>
+                <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="import.html"><i class="fas fa-file-import"></i> <span class="nav-text" data-en="Import" data-ja="インポート">Import</span></a></li>
+                <li><a href="allsongs.html"><i class="fas fa-music"></i> <span class="nav-text" data-en="All Songs" data-ja="全曲">All Songs</span></a></li>
+                <li><a href="songs-by-date.html"><i class="fas fa-calendar-alt"></i> <span class="nav-text" data-en="By Date" data-ja="日付順">By Date</span></a></li>
+                <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
+                <li><a href="stream.html" class="active"><i class="fas fa-play-circle"></i> <span class="nav-text" data-en="Live Stream" data-ja="ライブ配信">Live Stream</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
+                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><span class="header-icon">📺</span> <span data-en="Live Stream" data-ja="ライブ配信">Live Stream</span></h1>
+        </div>
+
+        <div class="stream-container" id="streamContent">
+            <!-- Content will be loaded based on settings -->
+        </div>
+    </div>
+
+
+
+    <script src="js/app.js"></script>
+    <script src="js/stream.js"></script>
+</body>
+</html>

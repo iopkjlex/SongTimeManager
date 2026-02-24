@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Stream - Song List Manager</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/stream.css">
+    <title>Song List Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
 </head>
 <body>
     <nav class="navbar">
@@ -17,11 +16,8 @@
                 <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
             </a>
             <ul class="nav-menu">
-                <li><a href="import.html"><i class="fas fa-file-import"></i> <span class="nav-text" data-en="Import" data-ja="インポート">Import</span></a></li>
-                <li><a href="allsongs.html"><i class="fas fa-music"></i> <span class="nav-text" data-en="All Songs" data-ja="全曲">All Songs</span></a></li>
-                <li><a href="songs-by-date.html"><i class="fas fa-calendar-alt"></i> <span class="nav-text" data-en="By Date" data-ja="日付順">By Date</span></a></li>
+                <li><a href="songs-summary.html"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
                 <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
-                <li><a href="stream.html" class="active"><i class="fas fa-play-circle"></i> <span class="nav-text" data-en="Live Stream" data-ja="ライブ配信">Live Stream</span></a></li>
                 <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
                 <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
             </ul>
@@ -38,10 +34,7 @@
         </div>
     </div>
 
-
-
     <script src="../js/app.js"></script>
-    <script src="../js/stream.js"></script>
     <!-- <script>
         let channelSettings = null;
         
@@ -93,11 +86,7 @@
         function renderContent() {
             const container = document.getElementById('streamContent');
             
-            // Debug: Check what settings we have
-            console.log('Channel Settings:', channelSettings);
-            
             if (!channelSettings || (!channelSettings.channelUrl && !channelSettings.previewUrl)) {
-                // Show setup prompt
                 container.innerHTML = `
                     <div class="setup-prompt">
                         <i class="fas fa-cog"></i>
@@ -114,26 +103,24 @@
             // Try to extract channel ID from URL if not set
             if (!channelSettings.channelId && channelSettings.channelUrl) {
                 channelSettings.channelId = extractChannelId(channelSettings.channelUrl);
-                console.log('Extracted channel ID:', channelSettings.channelId);
             }
             
-            // If preview URL is set, show it prominently
+            // If preview URL is set, show it
             if (channelSettings.previewUrl) {
                 const videoId = extractVideoId(channelSettings.previewUrl);
                 if (videoId) {
                     const channelName = channelSettings.channelName || 'YouTube Channel';
+                    const channelUrl = channelSettings.channelUrl || '#';
                     container.innerHTML = `
-                        <!-- Channel Info -->
                         <div class="channel-info">
                             <div class="channel-avatar">
                                 <i class="fab fa-youtube"></i>
                             </div>
-                            <div class="channel-details">
+                            <a href="${channelUrl}" target="_blank" class="channel-details">
                                 <h1>${channelName}</h1>
-                            </div>
+                            </a>
                         </div>
 
-                        <!-- Video Preview -->
                         <div class="video-grid" style="grid-template-columns: 1fr;">
                             <a href="${channelSettings.previewUrl}" target="_blank" class="video-card">
                                 <div class="video-card-thumbnail">
@@ -145,45 +132,29 @@
                             </a>
                         </div>
                     `;
-                    
-                    // Also load channel videos below if channel is set
-                    if (channelSettings.channelId) {
-                        // Channel is configured but no additional UI needed
-                    }
                     return;
                 }
             }
             
-            // If no preview URL but channel ID exists, load latest video from channel
+            // If no preview URL but channel ID exists, load latest video
             if (channelSettings.channelId) {
                 loadLatestVideo(channelSettings, container);
                 return;
             }
             
             const channelName = channelSettings.channelName || 'YouTube Channel';
-            const channelId = channelSettings.channelId;
-            const channelUrl = channelSettings.channelUrl || `https://www.youtube.com/channel/${channelId}`;
+            const channelUrl = channelSettings.channelUrl || '#';
             
-            // Render channel content
             container.innerHTML = `
-                <!-- Channel Info -->
                 <div class="channel-info">
                     <div class="channel-avatar">
                         <i class="fab fa-youtube"></i>
                     </div>
-                    <div class="channel-details">
+                    <a href="${channelUrl}" target="_blank" class="channel-details">
                         <h1>${channelName}</h1>
-                    </div>
+                    </a>
                 </div>
 
-                <!-- Open Channel Button Removed -->
-
-                <!-- Recent Videos Grid -->
-                <h2 class="section-title">
-                    <i class="fas fa-history"></i>
-                    <span data-en="Recent Streams" data-ja="最近の配信">Recent Streams</span>
-                </h2>
-                
                 <div class="video-grid" id="videoGrid">
                     <div class="loading">
                         <i class="fas fa-spinner"></i>
@@ -191,14 +162,12 @@
                 </div>
             `;
             
-            // Load videos
             loadVideos();
         }
         
         async function loadLatestVideo(channelSettings, container) {
             const channelId = channelSettings.channelId;
             const channelName = channelSettings.channelName || 'YouTube Channel';
-            const channelUrl = channelSettings.channelUrl || `https://www.youtube.com/channel/${channelId}`;
             
             container.innerHTML = `
                 <div class="loading">
@@ -206,7 +175,6 @@
                 </div>
             `;
             
-            // Use a CORS proxy service
             const proxyUrl = 'https://api.allorigins.win/raw?url=';
             const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
             
@@ -223,18 +191,17 @@
                     const title = entry.querySelector('title')?.textContent || 'Latest Video';
                     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                     
+                    const channelUrl = channelSettings.channelUrl || '#';
                     container.innerHTML = `
-                        <!-- Channel Info -->
                         <div class="channel-info">
                             <div class="channel-avatar">
                                 <i class="fab fa-youtube"></i>
                             </div>
-                            <div class="channel-details">
+                            <a href="${channelUrl}" target="_blank" class="channel-details">
                                 <h1>${channelName}</h1>
-                            </div>
+                            </a>
                         </div>
 
-                        <!-- Latest Video Preview -->
                         <div class="video-grid" style="grid-template-columns: 1fr;">
                             <a href="${videoUrl}" target="_blank" class="video-card">
                                 <div class="video-card-thumbnail">
@@ -246,23 +213,10 @@
                             </a>
                         </div>
                     `;
-                } else {
-                    showChannelPrompt(channelUrl, container);
                 }
             } catch (error) {
                 console.error('Error loading latest video:', error);
-                showChannelPrompt(channelUrl, container);
             }
-        }
-        
-        function showChannelPrompt(channelUrl, container) {
-            container.innerHTML = `
-                <div class="setup-prompt">
-                    <i class="fas fa-play-circle"></i>
-                    <h2>Latest Stream</h2>
-                    <p>Click the video above to watch on YouTube.</p>
-                </div>
-            `;
         }
         
         async function loadVideos() {
@@ -271,13 +225,11 @@
             const container = document.getElementById('videoGrid');
             const channelId = channelSettings.channelId;
             
-            // YouTube RSS feed URL
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
             const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-            const channelUrl = channelSettings.channelUrl || `https://www.youtube.com/channel/${channelId}`;
             
             try {
-                // Fetch from YouTube RSS feed
-                const response = await fetch(RSS_URL);
+                const response = await fetch(proxyUrl + encodeURIComponent(RSS_URL));
                 const text = await response.text();
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(text, 'text/xml');
@@ -286,12 +238,9 @@
                 
                 if (entries.length > 0) {
                     displayVideos(entries, container);
-                } else {
-                    showError(container, channelUrl);
                 }
             } catch (error) {
                 console.error('Error loading videos:', error);
-                showError(container, channelUrl);
             }
         }
         
@@ -321,20 +270,12 @@
             `).join('');
         }
         
-        function showError(container, channelUrl) {
-            container.innerHTML = `
-                <div class="no-stream" style="grid-column: 1 / -1;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>Unable to load video automatically</p>
-                </div>
-            `;
-        }
-        
-        // Load on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
             renderContent();
         });
     </script> -->
+    <script src="js/app.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html>

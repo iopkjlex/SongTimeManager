@@ -1,0 +1,61 @@
+
+        .summary-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .summary-tab {
+            padding: 12px 24px;
+            background: var(--card-bg, #1e1e2e);
+            border: 2px solid #333;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-color, #fff);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .summary-tab:hover {
+            border-color: var(--accent-color, #6366f1);
+        }
+        
+        .summary-tab.active {
+            background: var(--accent-color, #6366f1);
+            border-color: var(--accent-color, #6366f1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .song-type-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .date-group {
+            margin-bottom: 20px;
+        }
+        
+        .date-header {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 3px solid #00d9ff;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+    

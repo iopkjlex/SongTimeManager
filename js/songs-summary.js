@@ -1,397 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Song Summary - Song List Manager</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        .summary-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .summary-tab {
-            padding: 12px 24px;
-            background: var(--card-bg, #1e1e2e);
-            border: 2px solid #333;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-color, #fff);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .summary-tab:hover {
-            border-color: var(--accent-color, #6366f1);
-        }
-        
-        .summary-tab.active {
-            background: var(--accent-color, #6366f1);
-            border-color: var(--accent-color, #6366f1);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .song-type-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-        
-        .date-group {
-            margin-bottom: 20px;
-        }
-        
-        .date-header {
-            background: rgba(0, 217, 255, 0.1);
-            border-left: 3px solid #00d9ff;
-            padding: 12px 16px;
-            font-weight: 600;
-            color: #00d9ff;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-brand">
-                <span class="brand-icon">🎵</span>
-                <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="songs-summary.html" class="active"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
-                <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
-                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <div class="container">
-        <div class="page-header">
-            <h1><span class="header-icon">📋</span> <span data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></h1>
-            <div class="btn-group">
-                <button class="btn btn-export" onclick="exportToXLSX()">
-                    <span class="btn-icon">📥</span> <span data-en="Export XLSX" data-ja="XLSXエクスポート">Export XLSX</span>
-                </button>
-                <button class="btn btn-export" onclick="exportToCSV()">
-                    <span class="btn-icon">📋</span> <span data-en="Export CSV" data-ja="CSVエクスポート">Export CSV</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Tabs -->
-        <div class="summary-tabs">
-            <button class="summary-tab active" onclick="showTab('dashboard')">
-                <i class="fas fa-chart-bar"></i> <span data-en="Dashboard" data-ja="ダッシュボード">Dashboard</span>
-            </button>
-            <button class="summary-tab" onclick="showTab('import')">
-                <i class="fas fa-file-import"></i> <span data-en="Import" data-ja="インポート">Import</span>
-            </button>
-            <button class="summary-tab" onclick="showTab('allsongs')">
-                <i class="fas fa-music"></i> <span data-en="All Songs" data-ja="全曲">All Songs</span>
-            </button>
-            <button class="summary-tab" onclick="showTab('bydate')">
-                <i class="fas fa-calendar-alt"></i> <span data-en="By Date" data-ja="日付順">By Date</span>
-            </button>
-        </div>
-
-        <!-- Dashboard Tab -->
-        <div id="dashboard" class="tab-content active">
-            <!-- Main Stats -->
-            <div class="dashboard-grid">
-                <div class="stat-card stat-card-blue">
-                    <div class="stat-header-row">
-                        <div class="stat-icon-wrap">
-                            <span class="stat-emoji">🎤</span>
-                        </div>
-                        <div class="stat-number-wrap">
-                            <div class="number" id="uniqueSongs">0</div>
-                        </div>
-                    </div>
-                    <div class="stat-content">
-                        <div class="label">
-                            <span class="label-icon">🎵</span> <span data-en="Unique Song & Singer Groups" data-ja="ユニークな曲と歌手グループ">Unique Song & Singer Groups</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="stat-card stat-card-purple">
-                    <div class="stat-header-row">
-                        <div class="stat-icon-wrap">
-                            <span class="stat-emoji">▶️</span>
-                        </div>
-                        <div class="stat-number-wrap">
-                            <div class="number" id="totalPlays">0</div>
-                        </div>
-                    </div>
-                    <div class="stat-content">
-                        <div class="label">
-                            <span class="label-icon">🔥</span> <span data-en="Total Song Entries" data-ja="総曲数">Total Song Entries</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="stat-card stat-card-green">
-                    <div class="stat-header-row">
-                        <div class="stat-icon-wrap">
-                            <span class="stat-emoji">⭐</span>
-                        </div>
-                        <div class="stat-number-wrap">
-                            <div class="number" id="uniqueSingers">0</div>
-                        </div>
-                    </div>
-                    <div class="stat-content">
-                        <div class="label">
-                            <span class="label-icon">👤</span> <span data-en="Unique Singers" data-ja="ユニークな歌手数">Unique Singers</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><span class="chart-icon">🥇</span> <span data-en="Top 10 Most Played Songs" data-ja="再生回数トップ10">Top 10 Most Played Songs</span></h3>
-                    </div>
-                    <div class="top-songs-list" id="topSongsList">
-                        <div class="empty-state">
-                            <span class="empty-emoji">🎶</span>
-                            <p>No data yet</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><span class="chart-icon">🎤</span> <span data-en="Top Singers" data-ja="歌手ランキング">Top Singers</span></h3>
-                    </div>
-                    <div class="top-songs-list" id="topSingersList">
-                        <div class="empty-state">
-                            <span class="empty-emoji">🎤</span>
-                            <p>No data yet</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span class="card-icon">🕐</span> <span data-en="Recently Added" data-ja="最近追加">Recently Added</span></h2>
-                </div>
-                <div class="list-container" id="recentActivity">
-                    <div class="empty-state">
-                        <span class="empty-emoji">📝</span>
-                        <p>No recent activity</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Import Tab -->
-        <div id="import" class="tab-content">
-            <div class="main-grid">
-                <!-- Manual Import -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><span class="card-icon">➕</span> <span data-en="Add Single Song" data-ja="单曲追加">Add Single Song</span></h2>
-                    </div>
-
-                    <form onsubmit="addSingleSong(event)">
-                        <div class="form-group">
-                            <label for="songName">
-                                <i class="fas fa-music"></i> <span data-en="Song Name (Japanese)" data-ja="曲名 (日本語)">Song Name (Japanese)</span> *
-                            </label>
-                            <input type="text" id="songName" placeholder="Enter song name in Japanese" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="songNameEnglish">
-                                <i class="fas fa-music"></i> <span data-en="Song Name (English)" data-ja="曲名 (英語)">Song Name (English)</span>
-                            </label>
-                            <input type="text" id="songNameEnglish" placeholder="Enter song name in English (optional)">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="songSinger">
-                                <i class="fas fa-microphone"></i> <span data-en="Singer (Japanese)" data-ja="歌手 (日本語)">Singer (Japanese)</span>
-                            </label>
-                            <input type="text" id="songSinger" placeholder="Enter singer name in Japanese">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="songSingerEnglish">
-                                <i class="fas fa-microphone"></i> <span data-en="Singer (English)" data-ja="歌手 (英語)">Singer (English)</span>
-                            </label>
-                            <input type="text" id="songSingerEnglish" placeholder="Enter singer name in English (optional)">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="songType">
-                                <i class="fas fa-tag"></i> <span data-en="Song Type" data-ja="曲タイプ">Song Type</span>
-                            </label>
-                            <div class="searchable-dropdown">
-                                <input type="text" id="songType" placeholder="Select or type new type..." autocomplete="off">
-                                <div class="dropdown-list" id="songTypeDropdown"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>
-                                <i class="fas fa-clock"></i> <span data-en="Duration (Start ~ End)" data-ja="時間 (開始 ~ 終了)">Duration (Start ~ End)</span>
-                            </label>
-                            <div class="time-input-group">
-                                <input type="text" id="songStartTime" placeholder="00:06:15">
-                                <span class="time-separator">~</span>
-                                <input type="text" id="songEndTime" placeholder="00:10:29">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="importDate">
-                                <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
-                            </label>
-                            <input type="date" id="importDate">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-plus"></i> <span data-en="Add Song" data-ja="追加">Add Song</span>
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Bulk Import -->
-                <div class="card" style="display: flex; flex-direction: column;">
-                    <div class="card-header">
-                        <h2><span class="card-icon">📋</span> <span data-en="Bulk Import" data-ja="一括インポート">Bulk Import</span></h2>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="bulkDate">
-                            <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
-                        </label>
-                        <input type="date" id="bulkDate">
-                    </div>
-
-                    <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
-                        <label>
-                            <i class="fas fa-info-circle"></i> <span data-en="Format" data-ja="形式">Format</span>
-                        </label>
-                        <textarea id="bulkInput" style="flex: 1; min-height: 200px;" placeholder="Enter songs (one per line):&#10;&#10;01:22:41 ~ 01:27:21 | 君色シグナル(Kimiiro Signal) | 春奈るな(haruna runa)"></textarea>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="addBulkSongs()" style="width: 100%; margin-top: 15px;">
-                        <i class="fas fa-plus"></i> <span data-en="Import All" data-ja="全てインポート">Import All</span> (<span id="bulkCount">0</span> songs)
-                    </button>
-                </div>
-            </div>
-
-            <!-- File Import -->
-            <div class="card" style="margin-top: 25px;">
-                <div class="card-header">
-                    <h2><span class="card-icon">📁</span> <span data-en="Import from File" data-ja="ファイルからインポート">Import from File</span></h2>
-                </div>
-
-                <div class="form-group">
-                    <label for="fileDate">
-                        <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
-                    </label>
-                    <input type="date" id="fileDate">
-                </div>
-
-                <div class="actions-bar">
-                    <input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls" onchange="importFromFile(event)" style="display: none;">
-                    <button class="btn" onclick="document.getElementById('fileInput').click()">
-                        <i class="fas fa-file-upload"></i> <span data-en="Choose File" data-ja="ファイルを選択">Choose File</span>
-                    </button>
-                    <button class="btn" onclick="downloadTemplate()">
-                        <i class="fas fa-download"></i> <span data-en="Download Template" data-ja="テンプレートダウンロード">Download Template</span>
-                    </button>
-                </div>
-
-                <p style="color: #888; font-size: 0.9rem;">
-                    <i class="fas fa-info-circle"></i> Supported formats: .txt, .csv, .xlsx
-                </p>
-            </div>
-        </div>
-
-        <!-- All Songs Tab -->
-        <div id="allsongs" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <h2><span class="card-icon">🎵</span> <span data-en="All Songs" data-ja="全曲">All Songs</span></h2>
-                </div>
-                <div class="list-container" id="allSongsList">
-                    <div class="empty-state">
-                        <span class="empty-emoji">🎶</span>
-                        <p>No songs yet</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- By Date Tab -->
-        <div id="bydate" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <h2><span class="card-icon">📅</span> <span data-en="Songs by Date" data-ja="日付別曲">Songs by Date</span></h2>
-                </div>
-                <div class="list-container" id="songsList">
-                    <div class="empty-state">
-                        <span class="empty-emoji">📅</span>
-                        <p>No songs yet</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Preview Modal -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h3><i class="fas fa-eye"></i> <span data-en="Preview Import" data-ja="インポートプレビュー">Preview Import</span></h3>
-                <button class="modal-close" onclick="closePreviewModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p style="margin-bottom: 15px; color: #888;">
-                    <span id="previewModalCount">0</span> songs to import
-                </p>
-                <div class="list-container" id="previewModalList" style="max-height: 300px;"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="cancelImport()">
-                    <i class="fas fa-times"></i> <span data-en="Cancel" data-ja="キャンセル">Cancel</span>
-                </button>
-                <button class="btn btn-primary" onclick="confirmImport()">
-                    <i class="fas fa-check"></i> <span data-en="Import All" data-ja="全てインポート">Import All</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-    <script>
         // Tab functionality
         function showTab(tabId) {
             // Hide all tab contents
@@ -637,22 +244,40 @@
             const songs = [];
             const importDate = dateOverride || document.getElementById('bulkDate').value || getTodayString();
             
-            // Pattern: Start ~ End | SongName(English) | Singer(English) | Date | SongType
-            const newPattern = /(\d{2}:\d{2}:\d{2})\s*~\s*(\d{2}:\d{2}:\d{2})\s*[|]\s*(.+?)\s*[(]([^)]+)[)]\s*[|]\s*(.+?)\s*[(]([^)]+)[)]\s*[|]?\s*(\d{4}-\d{2}-\d{2})?\s*\|?\s*(.*)/;
+            // Pattern 1: Start ~ End Seq| SongName(English) | Singer(English) | Date | SongType
+            // Example: 00:06:33 ~ 00:10:19 01| しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)
+            // The sequence number (01) is ignored, English names are optional
+            const patternWithSeq = /^(\d{2}:\d{2}:\d{2})\s*~\s*(\d{2}:\d{2}:\d{2})\s*\d+\s*\|\s*(.+?)(?:\(([^)]+)\))?\s*\|\s*(.+?)(?:\(([^)]+)\))?\s*(?:\|(\d{4}-\d{2}-\d{2}))?(?:\s*\|(.*))?$/u;
+            
+            // Pattern 2: Start ~ End | SongName(English) | Singer(English) | Date | SongType (without sequence)
+            const patternNoSeq = /^(\d{2}:\d{2}:\d{2})\s*~\s*(\d{2}:\d{2}:\d{2})\s*\|\s*(.+?)(?:\(([^)]+)\))?\s*\|\s*(.+?)(?:\(([^)]+)\))?\s*(?:\|(\d{4}-\d{2}-\d{2}))?(?:\s*\|(.*))?$/u;
             
             lines.forEach(line => {
-                const newMatch = line.match(newPattern);
-                if (newMatch) {
-                    const startTime = newMatch[1].trim();
-                    const endTime = newMatch[2].trim();
-                    const songName = newMatch[3].trim();
-                    const songNameEnglish = newMatch[4].trim();
-                    const singer = newMatch[5].trim();
-                    const singerEnglish = newMatch[6].trim();
-                    const date = newMatch[7] ? newMatch[7].trim() : importDate;
-                    const songType = newMatch[8] ? newMatch[8].trim() : '';
+                console.log('Processing line:', line);
+                
+                // Try pattern with sequence number first
+                let match = line.match(patternWithSeq);
+                console.log('Pattern with seq match:', match);
+                
+                if (!match) {
+                    // Try pattern without sequence number
+                    match = line.match(patternNoSeq);
+                    console.log('Pattern no seq match:', match);
+                }
+                
+                if (match) {
+                    const startTime = match[1].trim();
+                    const endTime = match[2].trim();
+                    const songName = match[3].trim();
+                    const songNameEnglish = match[4] ? match[4].trim() : '';
+                    const singer = match[5].trim();
+                    const singerEnglish = match[6] ? match[6].trim() : '';
+                    const date = match[7] ? match[7].trim() : importDate;
+                    const songType = match[8] ? match[8].trim() : '';
                     
                     const duration = `${startTime} ~ ${endTime}`;
+                    
+                    console.log('Parsed:', { songName, songNameEnglish, singer, singerEnglish, duration });
                     
                     if (songName) {
                         songs.push({ 
@@ -668,6 +293,8 @@
                             sequence: 0
                         });
                     }
+                } else {
+                    console.log('No match for line:', line);
                 }
             });
             
@@ -1174,6 +801,4 @@
                 dropdown.appendChild(div);
             });
         }
-    </script>
-</body>
-</html>
+    

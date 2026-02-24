@@ -1,0 +1,251 @@
+
+        let selectedSongs = [];
+        let singerList = [];
+        let songTypeList = [];
+
+        // Load singers and song types on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSingers();
+            loadSongTypes();
+            setupSearchableDropdown('singerFilter', 'singerDropdown', singerList, 'singer');
+            setupSearchableDropdown('songTypeFilter', 'songTypeDropdown', songTypeList, 'songType');
+        });
+
+        /**
+         * Load unique singers into the dropdown
+         */
+        function loadSingers() {
+            const songs = Object.values(getSongData());
+            const singerSet = new Set();
+            
+            songs.forEach(song => {
+                if (song.singer) {
+                    singerSet.add(song.singer);
+                }
+            });
+            
+            singerList = Array.from(singerSet).sort();
+        }
+
+        /**
+         * Load song types based on selected singer
+         */
+        function loadSongTypes() {
+            const songs = Object.values(getSongData());
+            
+            // Get unique song types
+            const typeSet = new Set();
+            songs.forEach(song => {
+                if (song.songType) {
+                    typeSet.add(song.songType);
+                }
+            });
+            
+            songTypeList = Array.from(typeSet).sort();
+        }
+
+        /**
+         * Setup searchable dropdown functionality
+         */
+        function setupSearchableDropdown(inputId, dropdownId, itemList, filterType) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            
+            // Show dropdown on focus
+            input.addEventListener('focus', function() {
+                filterDropdownItems(input.value, dropdown, itemList);
+                dropdown.classList.add('show');
+            });
+            
+            // Filter on input
+            input.addEventListener('input', function() {
+                filterDropdownItems(input.value, dropdown, itemList);
+            });
+            
+            // Close dropdown on outside click
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+        /**
+         * Filter dropdown items based on search query
+         */
+        function filterDropdownItems(query, dropdown, items) {
+            dropdown.innerHTML = '';
+            const filtered = items.filter(item => 
+                item.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            // Add "All" option at the top
+            const allItem = document.createElement('div');
+            allItem.className = 'dropdown-item';
+            allItem.textContent = '-- All --';
+            allItem.addEventListener('click', function() {
+                const inputId = dropdown.id === 'singerDropdown' ? 'singerFilter' : 'songTypeFilter';
+                document.getElementById(inputId).value = '';
+                dropdown.classList.remove('show');
+            });
+            dropdown.appendChild(allItem);
+            
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = item;
+                div.addEventListener('click', function() {
+                    const inputId = dropdown.id === 'singerDropdown' ? 'singerFilter' : 'songTypeFilter';
+                    document.getElementById(inputId).value = item;
+                    dropdown.classList.remove('show');
+                });
+                dropdown.appendChild(div);
+            });
+        }
+
+        /**
+         * Pick random songs from the song list
+         */
+        async function pickRandomSongs() {
+            const countInput = document.getElementById('songCount');
+            const singerInput = document.getElementById('singerFilter');
+            const songTypeInput = document.getElementById('songTypeFilter');
+            
+            let count = parseInt(countInput.value) || 5;
+            const selectedSinger = singerInput.value;
+            const selectedType = songTypeInput.value;
+            
+            // Get all songs from storage
+            let songs = Object.values(getSongData());
+            
+            // Filter by singer if selected
+            if (selectedSinger) {
+                songs = songs.filter(song => song.singer === selectedSinger);
+            }
+            
+            // Filter by song type if selected
+            if (selectedType) {
+                songs = songs.filter(song => song.songType === selectedType);
+            }
+            
+            if (songs.length === 0) {
+                alert('No songs match the selected filters! Please try different filters.');
+                return;
+            }
+
+            // Clamp count to available songs
+            count = Math.min(count, songs.length);
+            count = Math.max(count, 1);
+
+            // Show picking animation
+            const animation = document.getElementById('pickingAnimation');
+            const pickingName = document.getElementById('pickingName');
+            const pickingSinger = document.getElementById('pickingSinger');
+            animation.style.display = 'flex';
+
+            // Shuffle and pick
+            const shuffled = [...songs].sort(() => Math.random() - 0.5);
+            const picked = shuffled.slice(0, count);
+            
+            // Show each picked song briefly in animation
+            for (let i = 0; i < picked.length; i++) {
+                pickingName.textContent = `${i + 1}. ${picked[i].name}`;
+                pickingSinger.textContent = picked[i].singer || '';
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            // Hide animation
+            animation.style.display = 'none';
+
+            // Store selected songs
+            selectedSongs = picked;
+
+            // Display results
+            displayResults(picked);
+        }
+
+        /**
+         * Display the picked songs
+         */
+        function displayResults(songs) {
+            const resultContainer = document.getElementById('resultContainer');
+            const emptyContainer = document.getElementById('emptyContainer');
+            const songList = document.getElementById('songList');
+            const resultCount = document.getElementById('resultCount');
+
+            if (songs.length === 0) {
+                resultContainer.style.display = 'none';
+                emptyContainer.style.display = 'block';
+                return;
+            }
+
+            resultContainer.style.display = 'block';
+            emptyContainer.style.display = 'none';
+            resultCount.textContent = songs.length;
+
+            songList.innerHTML = songs.map((song, index) => `
+                <li class="song-item">
+                    <div class="song-number">${index + 1}</div>
+                    <div class="song-info">
+                        <div class="song-name">${song.name}${song.songType ? ` <span class="song-type-badge">${song.songType}</span>` : ''}</div>
+                        <div class="song-singer">
+                            <i class="fas fa-user"></i> ${song.singer || 'Unknown'}
+                        </div>
+                    </div>
+                    <div class="song-actions">
+                        <button class="btn-icon-action" onclick="copySong(${index})" title="Copy">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        /**
+         * Copy a single song to clipboard
+         */
+        function copySong(index) {
+            const song = selectedSongs[index];
+            const text = `${song.name} - ${song.singer || 'Unknown'}`;
+            copyToClipboard(text);
+        }
+
+        /**
+         * Copy all songs to clipboard
+         */
+        function copyAllSongs() {
+            const text = selectedSongs.map((song, index) => 
+                `${index + 1}. ${song.name} - ${song.singer || 'Unknown'}`
+            ).join('\n');
+            copyToClipboard(text);
+        }
+
+        /**
+         * Copy text to clipboard and show toast
+         */
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        /**
+         * Show toast notification
+         */
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Allow Enter key to trigger pick
+        document.getElementById('songCount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                pickRandomSongs();
+            }
+        });
+    

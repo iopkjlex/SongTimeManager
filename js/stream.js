@@ -1,217 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Song List Manager</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .stream-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .channel-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--card-bg, #1e1e2e) 0%, var(--card-bg, #252535) 100%);
-            border: 1px solid #333;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            color: var(--text-color, #fff);
-        }
-        
-        .channel-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-        
-        .channel-details h1 {
-            margin: 0 0 5px 0;
-            font-size: 1.5rem;
-        }
-        
-        .channel-details {
-            text-decoration: none;
-            color: inherit;
-            transition: opacity 0.2s;
-        }
-        
-        .channel-details:hover {
-            opacity: 0.8;
-        }
-        
-        .channel-details p {
-            margin: 0;
-            opacity: 0.9;
-        }
-        
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .video-card {
-            background: var(--card-bg, #1e1e2e);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-        }
-        
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-        
-        .video-card-thumbnail {
-            position: relative;
-            padding-bottom: 56.25%;
-            background: #000;
-        }
-        
-        .video-card-thumbnail img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .video-card-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: var(--accent-color, #6366f1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .video-card:hover .video-card-play {
-            opacity: 1;
-        }
-        
-        .video-card-info {
-            padding: 12px;
-        }
-        
-        .video-card-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            color: var(--text-color, #fff);
-        }
-        
-        .video-card-meta {
-            font-size: 0.85rem;
-            color: #888;
-        }
-        
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 60px;
-        }
-        
-        .loading i {
-            font-size: 3rem;
-            color: var(--accent-color, #6366f1);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .setup-prompt {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .setup-prompt i {
-            font-size: 4rem;
-            color: var(--accent-color, #6366f1);
-            margin-bottom: 20px;
-        }
-        
-        .setup-prompt h2 {
-            margin-bottom: 10px;
-        }
-        
-        .setup-prompt p {
-            color: #888;
-            margin-bottom: 20px;
-        }
-        
-        .setup-prompt a {
-            padding: 12px 24px;
-            background: var(--accent-color, #6366f1);
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-brand">
-                <span class="brand-icon">🎵</span>
-                <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="songs-summary.html"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
-                <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
-                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <div class="container">
-        <div class="page-header">
-            <h1><span class="header-icon">📺</span> <span data-en="Live Stream" data-ja="ライブ配信">Live Stream</span></h1>
-        </div>
-
-        <div class="stream-container" id="streamContent">
-            <!-- Content will be loaded based on settings -->
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-    <script>
         let channelSettings = null;
         
         // Default video - can be changed in settings
@@ -262,7 +49,11 @@
         function renderContent() {
             const container = document.getElementById('streamContent');
             
+            // Debug: Check what settings we have
+            console.log('Channel Settings:', channelSettings);
+            
             if (!channelSettings || (!channelSettings.channelUrl && !channelSettings.previewUrl)) {
+                // Show setup prompt
                 container.innerHTML = `
                     <div class="setup-prompt">
                         <i class="fas fa-cog"></i>
@@ -279,24 +70,26 @@
             // Try to extract channel ID from URL if not set
             if (!channelSettings.channelId && channelSettings.channelUrl) {
                 channelSettings.channelId = extractChannelId(channelSettings.channelUrl);
+                console.log('Extracted channel ID:', channelSettings.channelId);
             }
             
-            // If preview URL is set, show it
+            // If preview URL is set, show it prominently
             if (channelSettings.previewUrl) {
                 const videoId = extractVideoId(channelSettings.previewUrl);
                 if (videoId) {
                     const channelName = channelSettings.channelName || 'YouTube Channel';
-                    const channelUrl = channelSettings.channelUrl || '#';
                     container.innerHTML = `
+                        <!-- Channel Info -->
                         <div class="channel-info">
                             <div class="channel-avatar">
                                 <i class="fab fa-youtube"></i>
                             </div>
-                            <a href="${channelUrl}" target="_blank" class="channel-details">
+                            <div class="channel-details">
                                 <h1>${channelName}</h1>
-                            </a>
+                            </div>
                         </div>
 
+                        <!-- Video Preview -->
                         <div class="video-grid" style="grid-template-columns: 1fr;">
                             <a href="${channelSettings.previewUrl}" target="_blank" class="video-card">
                                 <div class="video-card-thumbnail">
@@ -308,29 +101,45 @@
                             </a>
                         </div>
                     `;
+                    
+                    // Also load channel videos below if channel is set
+                    if (channelSettings.channelId) {
+                        // Channel is configured but no additional UI needed
+                    }
                     return;
                 }
             }
             
-            // If no preview URL but channel ID exists, load latest video
+            // If no preview URL but channel ID exists, load latest video from channel
             if (channelSettings.channelId) {
                 loadLatestVideo(channelSettings, container);
                 return;
             }
             
             const channelName = channelSettings.channelName || 'YouTube Channel';
-            const channelUrl = channelSettings.channelUrl || '#';
+            const channelId = channelSettings.channelId;
+            const channelUrl = channelSettings.channelUrl || `https://www.youtube.com/channel/${channelId}`;
             
+            // Render channel content
             container.innerHTML = `
+                <!-- Channel Info -->
                 <div class="channel-info">
                     <div class="channel-avatar">
                         <i class="fab fa-youtube"></i>
                     </div>
-                    <a href="${channelUrl}" target="_blank" class="channel-details">
+                    <div class="channel-details">
                         <h1>${channelName}</h1>
-                    </a>
+                    </div>
                 </div>
 
+                <!-- Open Channel Button Removed -->
+
+                <!-- Recent Videos Grid -->
+                <h2 class="section-title">
+                    <i class="fas fa-history"></i>
+                    <span data-en="Recent Streams" data-ja="最近の配信">Recent Streams</span>
+                </h2>
+                
                 <div class="video-grid" id="videoGrid">
                     <div class="loading">
                         <i class="fas fa-spinner"></i>
@@ -338,12 +147,14 @@
                 </div>
             `;
             
+            // Load videos
             loadVideos();
         }
         
         async function loadLatestVideo(channelSettings, container) {
             const channelId = channelSettings.channelId;
             const channelName = channelSettings.channelName || 'YouTube Channel';
+            const channelUrl = channelSettings.channelUrl || `https://www.youtube.com/channel/${channelId}`;
             
             container.innerHTML = `
                 <div class="loading">
@@ -351,6 +162,7 @@
                 </div>
             `;
             
+            // Use a CORS proxy service
             const proxyUrl = 'https://api.allorigins.win/raw?url=';
             const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
             
@@ -367,17 +179,18 @@
                     const title = entry.querySelector('title')?.textContent || 'Latest Video';
                     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                     
-                    const channelUrl = channelSettings.channelUrl || '#';
                     container.innerHTML = `
+                        <!-- Channel Info -->
                         <div class="channel-info">
                             <div class="channel-avatar">
                                 <i class="fab fa-youtube"></i>
                             </div>
-                            <a href="${channelUrl}" target="_blank" class="channel-details">
+                            <div class="channel-details">
                                 <h1>${channelName}</h1>
-                            </a>
+                            </div>
                         </div>
 
+                        <!-- Latest Video Preview -->
                         <div class="video-grid" style="grid-template-columns: 1fr;">
                             <a href="${videoUrl}" target="_blank" class="video-card">
                                 <div class="video-card-thumbnail">
@@ -389,10 +202,23 @@
                             </a>
                         </div>
                     `;
+                } else {
+                    showChannelPrompt(channelUrl, container);
                 }
             } catch (error) {
                 console.error('Error loading latest video:', error);
+                showChannelPrompt(channelUrl, container);
             }
+        }
+        
+        function showChannelPrompt(channelUrl, container) {
+            container.innerHTML = `
+                <div class="setup-prompt">
+                    <i class="fas fa-play-circle"></i>
+                    <h2>Latest Stream</h2>
+                    <p>Click the video above to watch on YouTube.</p>
+                </div>
+            `;
         }
         
         async function loadVideos() {
@@ -401,11 +227,13 @@
             const container = document.getElementById('videoGrid');
             const channelId = channelSettings.channelId;
             
-            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            // YouTube RSS feed URL
             const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+            const channelUrl = channelSettings.channelUrl || `https://www.youtube.com/channel/${channelId}`;
             
             try {
-                const response = await fetch(proxyUrl + encodeURIComponent(RSS_URL));
+                // Fetch from YouTube RSS feed
+                const response = await fetch(RSS_URL);
                 const text = await response.text();
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(text, 'text/xml');
@@ -414,9 +242,12 @@
                 
                 if (entries.length > 0) {
                     displayVideos(entries, container);
+                } else {
+                    showError(container, channelUrl);
                 }
             } catch (error) {
                 console.error('Error loading videos:', error);
+                showError(container, channelUrl);
             }
         }
         
@@ -446,10 +277,18 @@
             `).join('');
         }
         
+        function showError(container, channelUrl) {
+            container.innerHTML = `
+                <div class="no-stream" style="grid-column: 1 / -1;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Unable to load video automatically</p>
+                </div>
+            `;
+        }
+        
+        // Load on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
             renderContent();
         });
-    </script>
-</body>
-</html>
+    

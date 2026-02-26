@@ -17,6 +17,77 @@ body {
     background-attachment: fixed;
 }
 
+/* Skip Link for Accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 1000;
+    text-decoration: none;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus States - Visible focus indicators */
+:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+/* Remove outline only when replaced with focus-visible style */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Hover States */
+.btn:hover,
+.btn-pick:hover,
+.btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.btn:active,
+.btn-pick:active,
+.btn-export:active {
+    transform: translateY(0);
+}
+
+/* Link hover states */
+a:hover {
+    color: #818cf8;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .loading i {
+        animation: none;
+    }
+}
+
+/* Touch Action - prevents double-tap zoom delay */
+button,
+a,
+input,
+select,
+textarea {
+    touch-action: manipulation;
+}
+
 /* Background decorative elements */
 body::before {
     content: '';
@@ -632,7 +703,7 @@ html {
 
 ::-webkit-scrollbar {
     width: 8px;
-    height: 8px;n
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {

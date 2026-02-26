@@ -20,7 +20,7 @@
                 <li><a href="songs-summary.html"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
                 <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
                 <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;" aria-label="Toggle language"><i class="fas fa-language" aria-hidden="true"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
             </ul>
         </div>
     </nav>
@@ -32,8 +32,8 @@
 
         <div class="settings-container">
             <!-- Success Message -->
-            <div class="success-message" id="successMessage">
-                <i class="fas fa-check-circle"></i> Settings saved successfully!
+            <div class="success-message" id="successMessage" role="status" aria-live="polite">
+                <i class="fas fa-check-circle" aria-hidden="true"></i> Settings saved successfully!
             </div>
 
             <!-- YouTube Channel Settings -->
@@ -48,6 +48,8 @@
                         Current: <strong>Not set</strong>
                     </div>
                     <input type="text" id="youtubeChannelUrl" 
+                           name="youtubeChannelUrl"
+                           autocomplete="url"
                            data-en-placeholder="https://www.youtube.com/channel/UC..." 
                            data-ja-placeholder="https://www.youtube.com/channel/UC..."
                            placeholder="https://www.youtube.com/channel/UC...">
@@ -68,6 +70,8 @@
                         Current: <strong>Not set</strong>
                     </div>
                     <input type="text" id="channelName" 
+                           name="channelName"
+                           autocomplete="organization-title"
                            data-en-placeholder="My Channel" 
                            data-ja-placeholder="マイチャンネル"
                            placeholder="My Channel">
@@ -84,6 +88,8 @@
                         Current: <strong>Not set</strong>
                     </div>
                     <input type="text" id="previewUrl" 
+                           name="previewUrl"
+                           autocomplete="url"
                            data-en-placeholder="https://www.youtube.com/watch?v=BZDhUZIq844" 
                            data-ja-placeholder="https://www.youtube.com/watch?v=BZDhUZIq844"
                            placeholder="https://www.youtube.com/watch?v=BZDhUZIq844"

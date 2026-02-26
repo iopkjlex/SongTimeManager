@@ -281,6 +281,11 @@ function clearAllData() {
 const translations = {
     en: {
         // Navigation
+        'Song List Manager': 'Song List Manager',
+        'Song Summary': 'Song Summary',
+        'Random Pick': 'Random Pick',
+        'Settings': 'Settings',
+        'Live Stream': 'Live Stream',
         'Import': 'Import',
         'All Songs': 'All Songs',
         'By Date': 'By Date',
@@ -351,10 +356,33 @@ const translations = {
         'New': 'New',
         'Live': 'Live',
         'Hot': 'Hot',
-        'Stars': 'Stars'
+        'Stars': 'Stars',
+        
+        // Random Pick page
+        'Pick Random Songs': 'Pick Random Songs',
+        'Number of songs to pick:': 'Number of songs to pick:',
+        'Filter by Singer:': 'Filter by Singer:',
+        'Filter by Song Type:': 'Filter by Song Type:',
+        'Pick Songs': 'Pick Songs',
+        'Selected Songs': 'Selected Songs',
+        'Copy All': 'Copy All',
+        'No songs selected yet': 'No songs selected yet',
+        'Enter a number and click Pick Songs': 'Enter a number and click Pick Songs',
+        
+        // Empty states
+        'No songs yet': 'No songs yet',
+        'Top 10 Most Played Songs': 'Top 10 Most Played Songs',
+        'Top Singers': 'Top Singers',
+        'Recently Added': 'Recently Added',
+        'Songs by Date': 'Songs by Date'
     },
     ja: {
         // Navigation
+        'Song List Manager': '曲列表管理',
+        'Song Summary': '曲まとめ',
+        'Random Pick': 'ランダムピック',
+        'Settings': '設定',
+        'Live Stream': 'ライブ配信',
         'Import': 'インポート',
         'All Songs': '全曲',
         'By Date': '日付順',
@@ -418,15 +446,34 @@ const translations = {
         'songs!': '件の曲!',
         
         // Empty states
-        'No data yet': 'データなし',
-        'No recent activity': '最近のアクティビティなし',
+        'No data yet': 'データがありません',
+        'No recent activity': '最近の活動はありません',
+        'No songs yet': '曲がありません',
         
         // Labels
         'plays': '回',
         'New': '新着',
         'Live': 'ライブ',
         'Hot': '人気',
-        'Stars': 'スター'
+        'Stars': 'スター',
+        
+        // Random Pick page
+        'Pick Random Songs': '曲をランダム選択',
+        'Number of songs to pick:': '選択する曲数:',
+        'Filter by Singer:': '歌手でフィルター:',
+        'Filter by Song Type:': '曲タイプでフィルター:',
+        'Pick Songs': '曲をピック',
+        'Selected Songs': '選択された曲',
+        'Copy All': '全てコピー',
+        'No songs selected yet': 'まだ曲が選択されていません',
+        'Enter a number and click Pick Songs': '数を入力してピックボタンをクリック',
+        
+        // Empty states
+        'No songs yet': '曲がありません',
+        'Top 10 Most Played Songs': '再生回数トップ10',
+        'Top Singers': '歌手ランキング',
+        'Recently Added': '最近追加',
+        'Songs by Date': '日付別曲'
     }
 };
 

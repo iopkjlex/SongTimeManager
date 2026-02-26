@@ -11,6 +11,7 @@
     
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-brand">
@@ -21,12 +22,12 @@
                 <li><a href="songs-summary.html" class="active"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
                 <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
                 <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;" aria-label="Toggle language"><i class="fas fa-language" aria-hidden="true"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
             </ul>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" id="main-content">
         <div class="page-header">
             <h1><span class="header-icon">📋</span> <span data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></h1>
             <div class="btn-group">
@@ -115,7 +116,7 @@
                     <div class="top-songs-list" id="topSongsList">
                         <div class="empty-state">
                             <span class="empty-emoji">🎶</span>
-                            <p>No data yet</p>
+                            <p><span data-en="No data yet" data-ja="データがありません">No data yet</span></p>
                         </div>
                     </div>
                 </div>
@@ -127,7 +128,7 @@
                     <div class="top-songs-list" id="topSingersList">
                         <div class="empty-state">
                             <span class="empty-emoji">🎤</span>
-                            <p>No data yet</p>
+                            <p><span data-en="No data yet" data-ja="データがありません">No data yet</span></p>
                         </div>
                     </div>
                 </div>
@@ -141,7 +142,7 @@
                 <div class="list-container" id="recentActivity">
                     <div class="empty-state">
                         <span class="empty-emoji">📝</span>
-                        <p>No recent activity</p>
+                        <p><span data-en="No recent activity" data-ja="最近の活動はありません">No recent activity</span></p>
                     </div>
                 </div>
             </div>
@@ -161,28 +162,28 @@
                             <label for="songName">
                                 <i class="fas fa-music"></i> <span data-en="Song Name (Japanese)" data-ja="曲名 (日本語)">Song Name (Japanese)</span> *
                             </label>
-                            <input type="text" id="songName" placeholder="Enter song name in Japanese" required>
+                            <input type="text" id="songName" name="songName" data-en-placeholder="Enter song name in Japanese" data-ja-placeholder="曲名を入力 (日本語)" placeholder="Enter song name in Japanese" required>
                         </div>
 
                         <div class="form-group">
                             <label for="songNameEnglish">
                                 <i class="fas fa-music"></i> <span data-en="Song Name (English)" data-ja="曲名 (英語)">Song Name (English)</span>
                             </label>
-                            <input type="text" id="songNameEnglish" placeholder="Enter song name in English (optional)">
+                            <input type="text" id="songNameEnglish" name="songNameEnglish" data-en-placeholder="Enter song name in English (optional)" data-ja-placeholder="曲名を入力 (英語/任意)" placeholder="Enter song name in English (optional)">
                         </div>
 
                         <div class="form-group">
                             <label for="songSinger">
                                 <i class="fas fa-microphone"></i> <span data-en="Singer (Japanese)" data-ja="歌手 (日本語)">Singer (Japanese)</span>
                             </label>
-                            <input type="text" id="songSinger" placeholder="Enter singer name in Japanese">
+                            <input type="text" id="songSinger" name="songSinger" data-en-placeholder="Enter singer name in Japanese" data-ja-placeholder="歌手名を入力 (日本語)" placeholder="Enter singer name in Japanese">
                         </div>
 
                         <div class="form-group">
                             <label for="songSingerEnglish">
                                 <i class="fas fa-microphone"></i> <span data-en="Singer (English)" data-ja="歌手 (英語)">Singer (English)</span>
                             </label>
-                            <input type="text" id="songSingerEnglish" placeholder="Enter singer name in English (optional)">
+                            <input type="text" id="songSingerEnglish" name="songSingerEnglish" data-en-placeholder="Enter singer name in English (optional)" data-ja-placeholder="歌手名を入力 (英語/任意)" placeholder="Enter singer name in English (optional)">
                         </div>
 
                         <div class="form-group">
@@ -190,7 +191,7 @@
                                 <i class="fas fa-tag"></i> <span data-en="Song Type" data-ja="曲タイプ">Song Type</span>
                             </label>
                             <div class="searchable-dropdown">
-                                <input type="text" id="songType" placeholder="Select or type new type..." autocomplete="off">
+                                <input type="text" id="songType" name="songType" data-en-placeholder="Select or type new type..." data-ja-placeholder="タイプを選択または入力..." placeholder="Select or type new type..." autocomplete="off">
                                 <div class="dropdown-list" id="songTypeDropdown"></div>
                             </div>
                         </div>
@@ -200,9 +201,9 @@
                                 <i class="fas fa-clock"></i> <span data-en="Duration (Start ~ End)" data-ja="時間 (開始 ~ 終了)">Duration (Start ~ End)</span>
                             </label>
                             <div class="time-input-group">
-                                <input type="text" id="songStartTime" placeholder="00:06:15">
+                                <input type="text" id="songStartTime" name="songStartTime" data-en-placeholder="00:06:15" data-ja-placeholder="00:06:15" placeholder="00:06:15">
                                 <span class="time-separator">~</span>
-                                <input type="text" id="songEndTime" placeholder="00:10:29">
+                                <input type="text" id="songEndTime" name="songEndTime" data-en-placeholder="00:10:29" data-ja-placeholder="00:10:29" placeholder="00:10:29">
                             </div>
                         </div>
 
@@ -210,7 +211,7 @@
                             <label for="importDate">
                                 <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
                             </label>
-                            <input type="date" id="importDate">
+                            <input type="date" id="importDate" name="importDate">
                         </div>
 
                         <button type="submit" class="btn btn-primary" style="width: 100%;">
@@ -229,14 +230,14 @@
                         <label for="bulkDate">
                             <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
                         </label>
-                        <input type="date" id="bulkDate">
+                        <input type="date" id="bulkDate" name="bulkDate">
                     </div>
 
                     <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
                         <label>
                             <i class="fas fa-info-circle"></i> <span data-en="Format" data-ja="形式">Format</span>
                         </label>
-                        <textarea id="bulkInput" style="flex: 1; min-height: 200px;" placeholder="Enter songs (one per line):&#10;&#10;Format 1 (with sequence): 00:06:33 ~ 00:10:19 01| しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;Format 2 (no sequence): 00:06:33 ~ 00:10:19 | しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;&#10;English names are optional: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ"></textarea>
+                        <textarea id="bulkInput" name="bulkInput" style="flex: 1; min-height: 200px;" data-en-placeholder="Enter songs (one per line):&#10;&#10;Format 1 (with sequence): 00:06:33 ~ 00:10:19 01| しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;Format 2 (no sequence): 00:06:33 ~ 00:10:19 | しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;&#10;English names are optional: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ" data-ja-placeholder="曲を入力 (1行に1曲):&#10;&#10;形式1 (Seqあり): 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ&#10;形式2 (Seqなし): 00:06:33 ~ 00:10:19 | しらないうた | 苺咲べりぃ&#10;&#10;英語名は任意: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ" placeholder="Enter songs (one per line):&#10;&#10;Format 1 (with sequence): 00:06:33 ~ 00:10:19 01| しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;Format 2 (no sequence): 00:06:33 ~ 00:10:19 | しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;&#10;English names are optional: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ"></textarea>
                     </div>
 
                     <button class="btn btn-primary" onclick="addBulkSongs()" style="width: 100%; margin-top: 15px;">
@@ -255,13 +256,13 @@
                     <label for="fileDate">
                         <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
                     </label>
-                    <input type="date" id="fileDate">
+                    <input type="date" id="fileDate" name="fileDate">
                 </div>
 
                 <div class="actions-bar">
                     <input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls" onchange="importFromFile(event)" style="display: none;">
-                    <button class="btn" onclick="document.getElementById('fileInput').click()">
-                        <i class="fas fa-file-upload"></i> <span data-en="Choose File" data-ja="ファイルを選択">Choose File</span>
+                    <button class="btn" onclick="document.getElementById('fileInput').click()" aria-label="Choose file to import">
+                        <i class="fas fa-file-upload" aria-hidden="true"></i> <span data-en="Choose File" data-ja="ファイルを選択">Choose File</span>
                     </button>
                     <button class="btn" onclick="downloadTemplate()">
                         <i class="fas fa-download"></i> <span data-en="Download Template" data-ja="テンプレートダウンロード">Download Template</span>
@@ -283,7 +284,7 @@
                 <div class="list-container" id="allSongsList">
                     <div class="empty-state">
                         <span class="empty-emoji">🎶</span>
-                        <p>No songs yet</p>
+                        <p><span data-en="No songs yet" data-ja="曲がありません">No songs yet</span></p>
                     </div>
                 </div>
             </div>
@@ -298,7 +299,7 @@
                 <div class="list-container" id="songsList">
                     <div class="empty-state">
                         <span class="empty-emoji">📅</span>
-                        <p>No songs yet</p>
+                        <p><span data-en="No songs yet" data-ja="曲がありません">No songs yet</span></p>
                     </div>
                 </div>
             </div>
@@ -310,8 +311,8 @@
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h3><i class="fas fa-eye"></i> <span data-en="Preview Import" data-ja="インポートプレビュー">Preview Import</span></h3>
-                <button class="modal-close" onclick="closePreviewModal()">
-                    <i class="fas fa-times"></i>
+                <button class="modal-close" onclick="closePreviewModal()" aria-label="Close modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="modal-body">

@@ -19,7 +19,7 @@
                 <li><a href="songs-summary.html"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
                 <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
                 <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;"><i class="fas fa-language"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;" aria-label="Toggle language"><i class="fas fa-language" aria-hidden="true"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
             </ul>
         </div>
     </nav>
@@ -124,7 +124,7 @@
                         <div class="video-grid" style="grid-template-columns: 1fr;">
                             <a href="${channelSettings.previewUrl}" target="_blank" class="video-card">
                                 <div class="video-card-thumbnail">
-                                    <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="Preview Video">
+                                    <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="Preview Video" width="1280" height="720">
                                     <div class="video-card-play" style="opacity: 1; width: 80px; height: 80px; font-size: 32px;">
                                         <i class="fas fa-play"></i>
                                     </div>

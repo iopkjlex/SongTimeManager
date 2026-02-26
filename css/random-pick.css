@@ -96,9 +96,9 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: var(--card-bg, #1e1e2e);
-            border: 2px solid #333;
-            border-top: none;
+            background: #1e1e2e !important;
+            border: 2px solid #333 !important;
+            border-top: none !important;
             border-radius: 0 0 8px 8px;
             max-height: 200px;
             overflow-y: auto;
@@ -115,6 +115,7 @@
             cursor: pointer;
             transition: background 0.2s;
             border-bottom: 1px solid #333;
+            color: #fff !important;
         }
 
         .dropdown-item:last-child {
@@ -122,8 +123,8 @@
         }
 
         .dropdown-item:hover {
-            background: var(--accent-color, #6366f1);
-            color: white;
+            background: #6366f1 !important;
+            color: white !important;
         }
 
         .dropdown-item.selected {

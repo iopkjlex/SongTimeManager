@@ -36,7 +36,7 @@ body {
 
 /* Focus States - Visible focus indicators */
 :focus-visible {
-    outline: 2px solid #6366f1;
+    outline: 2px solid #00d9ff;
     outline-offset: 2px;
 }
 
@@ -50,7 +50,7 @@ body {
 .btn-pick:hover,
 .btn-export:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
 }
 
 .btn:active,
@@ -61,7 +61,7 @@ body {
 
 /* Link hover states */
 a:hover {
-    color: #818cf8;
+    color: #00d9ff;
 }
 
 /* Reduced Motion Support */
@@ -97,7 +97,7 @@ body::before {
     width: 200%;
     height: 200%;
     background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 0, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(255, 0, 128, 0.05) 0%, transparent 40%);
     pointer-events: none;
@@ -153,7 +153,7 @@ body::before {
 }
 
 .lang-toggle:hover {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
 }
 
@@ -168,7 +168,7 @@ body::before {
 }
 
 .nav-brand span:last-child {
-    background: linear-gradient(90deg, #00d9ff, #a855f7);
+    background: linear-gradient(90deg, #00d9ff, #ff6b35);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -211,10 +211,9 @@ body::before {
 
 .nav-menu li a:hover,
 .nav-menu li a.active {
-    background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.2));
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
 }
 
 .nav-text {
@@ -290,10 +289,9 @@ body::before {
 }
 
 .btn-export:hover {
-    background: linear-gradient(135deg, #00d9ff, #a855f7);
-    border-color: transparent;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 217, 255, 0.4);
 }
 
 /* Dashboard Stats */
@@ -343,28 +341,24 @@ body::before {
 }
 
 .stat-card-blue {
-    --card-color: #00d9ff;
-    background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(0, 217, 255, 0.02) 100%);
-    border-color: rgba(0, 217, 255, 0.3);
-}
-
-.stat-card-purple {
-    --card-color: #a855f7;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0.02) 100%);
-    border-color: rgba(168, 85, 247, 0.3);
-}
-
-.stat-card-green {
-    --card-color: #10b981;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.02) 100%);
-    border-color: rgba(16, 185, 129, 0.3);
+    --card-color: #ccc;
+    background: linear-gradient(135deg, rgba(204, 204, 204, 0.12) 0%, rgba(204, 204, 204, 0.02) 100%);
+    border-color: rgba(204, 204, 204, 0.25);
 }
 
 .stat-card-orange {
-    --card-color: #f59e0b;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.02) 100%);
-    border-color: rgba(245, 158, 11, 0.3);
+    --card-color: #888;
+    background: linear-gradient(135deg, rgba(136, 136, 136, 0.12) 0%, rgba(136, 136, 136, 0.02) 100%);
+    border-color: rgba(136, 136, 136, 0.25);
 }
+
+.stat-card-green {
+    --card-color: #666;
+    background: linear-gradient(135deg, rgba(102, 102, 102, 0.12) 0%, rgba(102, 102, 102, 0.02) 100%);
+    border-color: rgba(102, 102, 102, 0.25);
+}
+
+/* Duplicate removed - using gray tones above */
 
 .stat-card:hover {
     border-color: var(--card-color);
@@ -500,8 +494,8 @@ body::before {
     letter-spacing: 0.5px;
 }
 
-.chart-badge-purple {
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+.chart-badge-orange {
+    background: linear-gradient(135deg, #ff6b35, #ea580c);
 }
 
 .top-songs-list {
@@ -755,8 +749,9 @@ html {
     flex-shrink: 0;
 }
 
-.item-emoji {
+.list-item-icon i {
     font-size: 1.3rem;
+    color: #00d9ff;
 }
 
 /* Sequence Badge */
@@ -766,11 +761,12 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     font-weight: bold;
     font-size: 0.9rem;
-    color: white;
+    color: #aaa;
     flex-shrink: 0;
 }
 
@@ -808,8 +804,9 @@ html {
 
 /* List Item Count */
 .list-item-count {
-    background: linear-gradient(135deg, #00d9ff, #a855f7);
-    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 8px 18px;
     border-radius: 25px;
     font-weight: bold;
@@ -900,8 +897,9 @@ html {
 
 .searchable-dropdown input:focus {
     outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    border-color: #00d9ff;
+    background: rgba(0, 217, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
 }
 
 .searchable-dropdown .dropdown-list {
@@ -940,13 +938,13 @@ html {
 }
 
 .searchable-dropdown .dropdown-item.dropdown-item-new {
-    background: #f0f9ff;
-    color: #4f46e5;
+    background: #fff5f0;
+    color: #ff6b35;
     font-weight: 500;
 }
 
 .searchable-dropdown .dropdown-item.dropdown-item-new:hover {
-    background: #e0f2fe;
+    background: #ffe8dc;
 }
 
 /* Empty State */
@@ -956,11 +954,12 @@ html {
     padding: 50px 20px;
 }
 
-.empty-emoji {
-    font-size: 4rem;
+.empty-state > i {
+    font-size: 3.5rem;
     display: block;
     margin-bottom: 15px;
-    filter: grayscale(0.5);
+    color: #666;
+    opacity: 0.6;
 }
 
 .empty-state p {
@@ -1042,8 +1041,9 @@ html {
 }
 
 .sort-btn:hover, .sort-btn.active {
-    background: linear-gradient(135deg, #00d9ff, #a855f7);
+    background: rgba(255, 255, 255, 0.2);
     color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
     border-color: transparent;
     transform: translateY(-2px);
 }
@@ -1100,6 +1100,17 @@ input:focus, select:focus, textarea:focus {
     border-color: #00d9ff;
     background: rgba(0, 217, 255, 0.05);
     box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+}
+
+/* Hide number input spinner buttons */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .form-row {

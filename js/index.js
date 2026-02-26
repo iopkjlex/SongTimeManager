@@ -236,5 +236,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
             renderContent();
+            // Apply language to dynamic content
+            if (typeof applyLanguage === 'function') {
+                applyLanguage();
+            }
         });
     

@@ -45,7 +45,7 @@
         
         .form-group input:focus {
             outline: none;
-            border-color: var(--accent-color, #6366f1);
+            border-color: rgba(255, 255, 255, 0.4);
         }
         
         .form-group .help-text {
@@ -67,21 +67,23 @@
         }
         
         .btn-primary {
-            background: var(--accent-color, #6366f1);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .btn-primary:hover {
-            background: var(--accent-hover, #4f46e5);
+            background: rgba(255, 255, 255, 0.25);
         }
         
         .btn-secondary {
-            background: #333;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         .btn-secondary:hover {
-            background: #444;
+            background: rgba(255, 255, 255, 0.2);
         }
         
         .current-value {

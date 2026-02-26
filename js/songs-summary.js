@@ -32,6 +32,96 @@
             }
         }
         
+        // Reusable searchable dropdown functions (shared with random-pick.js)
+        let songTypeList = [];
+        
+        /**
+         * Load song types from localStorage and song data
+         */
+        function loadSongTypesForFilter() {
+            // Get custom song types from localStorage
+            const customSongTypes = JSON.parse(localStorage.getItem('customSongTypes')) || [];
+            
+            // Get song types from actual song data in localStorage
+            const songs = getSongData();
+            const typeSet = new Set();
+            Object.values(songs).forEach(song => {
+                if (song.songType) {
+                    typeSet.add(song.songType);
+                }
+            });
+            
+            // Combine custom types and song data types (no defaults)
+            songTypeList = [...new Set([...customSongTypes, ...typeSet])].sort();
+        }
+        
+        /**
+         * Setup searchable dropdown functionality
+         */
+        function setupSearchableDropdown(inputId, dropdownId, itemList) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            
+            if (!input || !dropdown) return;
+            
+            // Show dropdown on focus
+            input.addEventListener('focus', function() {
+                filterDropdownItems(input.value, dropdown, itemList, inputId);
+                dropdown.classList.add('show');
+            });
+            
+            // Filter on input
+            input.addEventListener('input', function() {
+                filterDropdownItems(input.value, dropdown, itemList, inputId);
+            });
+            
+            // Close dropdown on outside click
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+        
+        /**
+         * Filter dropdown items based on search query
+         */
+        function filterDropdownItems(query, dropdown, items, inputId) {
+            dropdown.innerHTML = '';
+            const filtered = items.filter(item => 
+                item.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            // Add "All" option at the top
+            const allItem = document.createElement('div');
+            allItem.className = 'dropdown-item';
+            allItem.textContent = '-- All --';
+            allItem.addEventListener('click', function() {
+                document.getElementById(inputId).value = '';
+                dropdown.classList.remove('show');
+                // Trigger reload of data
+                if (inputId === 'songTypeFilter') {
+                    loadAllSongsData();
+                }
+            });
+            dropdown.appendChild(allItem);
+            
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = item;
+                div.addEventListener('click', function() {
+                    document.getElementById(inputId).value = item;
+                    dropdown.classList.remove('show');
+                    // Trigger reload of data
+                    if (inputId === 'songTypeFilter') {
+                        loadAllSongsData();
+                    }
+                });
+                dropdown.appendChild(div);
+            });
+        }
+        
         function loadDashboardData() {
             const stats = getStats();
             document.getElementById('uniqueSongs').textContent = stats.uniqueSongs;
@@ -47,7 +137,7 @@
                 topSongsList.innerHTML = songs.slice(0, 10).map(song => `
                     <div class="list-item">
                         <div class="list-item-icon">
-                            <span class="item-emoji">🎵</span>
+                            <i class="fas fa-music"></i>
                         </div>
                         <div class="list-item-info">
                             <div class="list-item-name">${song.name}${song.nameEnglish ? ` (${song.nameEnglish})` : ''}</div>
@@ -75,7 +165,7 @@
                 topSingersList.innerHTML = sortedSingers.slice(0, 10).map(([singer, count]) => `
                     <div class="list-item">
                         <div class="list-item-icon">
-                            <span class="item-emoji">🎤</span>
+                            <i class="fas fa-microphone"></i>
                         </div>
                         <div class="list-item-info">
                             <div class="list-item-name">${singer}</div>
@@ -95,7 +185,7 @@
                 recentActivity.innerHTML = recentSongs.map(song => `
                     <div class="list-item">
                         <div class="list-item-icon">
-                            <span class="item-emoji">🎵</span>
+                            <i class="fas fa-music"></i>
                         </div>
                         <div class="list-item-info">
                             <div class="list-item-name">${song.name}</div>
@@ -110,7 +200,14 @@
         }
         
         function loadAllSongsData() {
-            const songs = Object.values(getSongData());
+            let songs = Object.values(getSongData());
+            
+            // Filter by song type if filter is set
+            const songTypeFilter = document.getElementById('songTypeFilter')?.value;
+            if (songTypeFilter) {
+                songs = songs.filter(song => song.songType === songTypeFilter);
+            }
+            
             songs.sort((a, b) => b.count - a.count);
             
             const container = document.getElementById('allSongsList');
@@ -120,7 +217,7 @@
                     return `
                     <div class="list-item">
                         <div class="list-item-icon">
-                            <span class="item-emoji">🎵</span>
+                            <i class="fas fa-music"></i>
                         </div>
                         <div class="list-item-info">
                             <div class="list-item-name">${song.name}${song.nameEnglish ? ` (${song.nameEnglish})` : ''}${song.songType ? ` <span class="song-type-badge">${song.songType}</span>` : ''}</div>
@@ -176,7 +273,7 @@
             if (allEntries.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <span class="empty-emoji">📅</span>
+                        <i class="fas fa-calendar"></i>
                         <p>No songs yet</p>
                     </div>
                 `;
@@ -208,7 +305,7 @@
                             <div class="list-item">
                                 <div class="list-item-sequence">#${entry.sequence || '-'}</div>
                                 <div class="list-item-icon">
-                                    <span class="item-emoji">🎵</span>
+                                    <i class="fas fa-music"></i>
                                 </div>
                                 <div class="list-item-info">
                                     <div class="list-item-name">${entry.name}${entry.nameEnglish ? ` (${entry.nameEnglish})` : ''}${entry.songType ? ` <span class="song-type-badge">${entry.songType}</span>` : ''}</div>
@@ -306,7 +403,7 @@
             const bulkDate = document.getElementById('bulkDate').value || getTodayString();
             
             if (!text) {
-                alert('Please enter some songs to import');
+                alert(translations[currentLang]?.['Please enter some songs to import'] || 'Please enter some songs to import');
                 return;
             }
 
@@ -315,7 +412,7 @@
             if (previewSongs.length > 0) {
                 showPreviewModal(previewSongs);
             } else {
-                alert('No valid songs found to import');
+                alert(translations[currentLang]?.['No valid songs found to import'] || 'No valid songs found to import');
             }
         }
         
@@ -328,7 +425,7 @@
                 <div class="list-item">
                     <div class="list-item-sequence">#${song.sequence || '-'}</div>
                     <div class="list-item-icon">
-                        <span class="item-emoji">🎵</span>
+                        <i class="fas fa-music"></i>
                     </div>
                     <div class="list-item-info">
                         <div class="list-item-name">${song.name}${song.nameEnglish ? ` (${song.nameEnglish})` : ''}${song.songType ? ` <span class="song-type-badge">${song.songType}</span>` : ''}</div>
@@ -357,7 +454,7 @@
         
         function confirmImport() {
             if (previewSongs.length === 0) {
-                alert('No songs to import');
+                alert(translations[currentLang]?.['No songs to import'] || 'No songs to import');
                 return;
             }
             
@@ -437,7 +534,7 @@
             closePreviewModal();
             document.getElementById('bulkInput').value = '';
             updateBulkCount();
-            alert(`Successfully imported ${addedCount} songs!`);
+            alert(`${translations[currentLang]?.['Successfully imported'] || 'Successfully imported'} ${addedCount} ${translations[currentLang]?.['songs!'] || 'songs!'}`);
             
             // Refresh data
             loadDashboardData();
@@ -475,7 +572,7 @@
             }
 
             if (!name) {
-                alert('Please enter a song name');
+                alert(translations[currentLang]?.['Please enter a song name'] || 'Please enter a song name');
                 return;
             }
 
@@ -558,7 +655,7 @@
             document.getElementById('songEndTime').value = '';
             document.getElementById('songSequence').value = '';
 
-            alert('Song added successfully!');
+            alert(translations[currentLang]?.['Song added successfully!'] || 'Song added successfully!');
             
             // Refresh data
             loadDashboardData();
@@ -595,7 +692,7 @@
                     if (previewSongs.length > 0) {
                         showPreviewModal(previewSongs);
                     } else {
-                        alert('No valid songs found in the file');
+                        alert(translations[currentLang]?.['No valid songs found in the file'] || 'No valid songs found in the file');
                     }
                 };
                 reader.readAsText(file, 'UTF-8');
@@ -627,9 +724,9 @@
                         const nameEnglish = String(row[1] || '').trim();
                         const singer = String(row[2] || '').trim();
                         const singerEnglish = String(row[3] || '').trim();
-                        const startTime = String(row[4] || '').trim();
-                        const endTime = String(row[5] || '').trim();
-                        const songType = String(row[6] || '').trim();
+                        const songType = String(row[4] || '').trim();
+                        const startTime = String(row[5] || '').trim();
+                        const endTime = String(row[6] || '').trim();
                         const date = String(row[7] || '').trim() || importDate;
                         
                         const duration = startTime && endTime ? `${startTime} ~ ${endTime}` : (startTime || '');
@@ -651,11 +748,11 @@
                     if (previewSongs.length > 0) {
                         showPreviewModal(previewSongs);
                     } else {
-                        alert('No valid songs found in the Excel file');
+                        alert(translations[currentLang]?.['No valid songs found in the Excel file'] || 'No valid songs found in the Excel file');
                     }
                 } catch (error) {
                     console.error('Error reading Excel file:', error);
-                    alert('Error reading Excel file. Please make sure the file format is correct.');
+                    alert(translations[currentLang]?.['Error reading Excel file. Please make sure the file format is correct.'] || 'Error reading Excel file. Please make sure the file format is correct.');
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -696,24 +793,43 @@
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadDashboardData();
+            // Apply language to dynamic content
+            if (typeof applyLanguage === 'function') {
+                applyLanguage();
+            }
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('importDate').value = today;
             document.getElementById('bulkDate').value = today;
             document.getElementById('fileDate').value = today;
             
-            // Setup searchable song type dropdown
+            // Setup searchable song type dropdown (for adding new songs)
             setupSongTypeDropdown();
+            
+            // Setup song type filter dropdown (for filtering songs)
+            loadSongTypesForFilter();
+            setupSearchableDropdown('songTypeFilter', 'songTypeFilterDropdown', songTypeList);
         });
         
         // Default song types
         const defaultSongTypes = ['Opening', 'Ending', 'Insert Song', 'Cover', 'Original', 'Live', 'Other'];
         
         /**
-         * Get all song types from localStorage + defaults
+         * Get all song types from localStorage songData + custom (no defaults)
          */
         function getSongTypes() {
+            // Get custom song types from localStorage
             const stored = JSON.parse(localStorage.getItem('customSongTypes')) || [];
-            return [...new Set([...defaultSongTypes, ...stored])].sort();
+            
+            // Get song types from actual song data in localStorage
+            const songs = getSongData();
+            const songTypeSet = new Set();
+            Object.values(songs).forEach(song => {
+                if (song.songType) {
+                    songTypeSet.add(song.songType);
+                }
+            });
+            
+            return [...new Set([...stored, ...songTypeSet])].sort();
         }
         
         /**

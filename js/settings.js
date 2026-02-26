@@ -2,6 +2,10 @@
         // Load current settings on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
+            // Apply language to dynamic content
+            if (typeof applyLanguage === 'function') {
+                applyLanguage();
+            }
         });
         
         function loadSettings() {
@@ -10,21 +14,27 @@
             // Update channel URL display
             const channelUrlEl = document.getElementById('currentChannelUrl');
             if (settings.channelUrl) {
-                channelUrlEl.innerHTML = `Current: <strong>${settings.channelUrl}</strong>`;
+                const currentText = translations[currentLang]?.['Current:'] || 'Current:';
+                channelUrlEl.innerHTML = `${currentText} <strong></strong>`;
+                channelUrlEl.querySelector('strong').textContent = settings.channelUrl;
                 document.getElementById('youtubeChannelUrl').value = settings.channelUrl;
             }
             
             // Update channel name display
             const channelNameEl = document.getElementById('currentChannelName');
             if (settings.channelName) {
-                channelNameEl.innerHTML = `Current: <strong>${settings.channelName}</strong>`;
+                const currentText = translations[currentLang]?.['Current:'] || 'Current:';
+                channelNameEl.innerHTML = `${currentText} <strong></strong>`;
+                channelNameEl.querySelector('strong').textContent = settings.channelName;
                 document.getElementById('channelName').value = settings.channelName;
             }
             
             // Update preview URL display
             const previewUrlEl = document.getElementById('currentPreviewUrl');
             if (settings.previewUrl) {
-                previewUrlEl.innerHTML = `Current: <strong>${settings.previewUrl}</strong>`;
+                const currentText = translations[currentLang]?.['Current:'] || 'Current:';
+                previewUrlEl.innerHTML = `${currentText} <strong></strong>`;
+                previewUrlEl.querySelector('strong').textContent = settings.previewUrl;
                 document.getElementById('previewUrl').value = settings.previewUrl;
             }
             
@@ -56,7 +66,7 @@
                                 <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="Preview Video">
                             </div>
                             <div class="preview-card-info">
-                                <div class="preview-card-title">🎬 Featured Preview Video</div>
+                                <div class="preview-card-title"><i class="fas fa-play"></i> Featured Preview Video</div>
                                 <div class="preview-card-date">Click to watch on YouTube</div>
                             </div>
                         </a>
@@ -107,7 +117,7 @@
                                 <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="${title}">
                             </div>
                             <div class="preview-card-info">
-                                <div class="preview-card-title">🎬 Latest: ${title}</div>
+                                <div class="preview-card-title"><i class="fas fa-play"></i> Latest: ${title}</div>
                                 <div class="preview-card-date">${published} - Click to watch on YouTube</div>
                             </div>
                         </a>
@@ -132,7 +142,7 @@
                         <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="YouTube Channel">
                     </div>
                     <div class="preview-card-info">
-                        <div class="preview-card-title">🎬 Click to view latest videos on YouTube</div>
+                        <div class="preview-card-title"><i class="fas fa-play"></i> Click to view latest videos on YouTube</div>
                         <div class="preview-card-date">Open YouTube Channel</div>
                     </div>
                 </a>
@@ -271,10 +281,36 @@
             URL.revokeObjectURL(url);
         }
         
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const songs = JSON.parse(e.target.result);
+                    if (Array.isArray(songs)) {
+                        // Save imported songs
+                        localStorage.setItem('songs', JSON.stringify(songs));
+                        alert('Data imported successfully! ' + songs.length + ' songs loaded.');
+                    } else {
+                        alert('Invalid data format. Please import a JSON array.');
+                    }
+                } catch (error) {
+                    alert('Error reading file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            // Reset input so same file can be selected again
+            event.target.value = '';
+        }
+        
         function clearData() {
             if (confirm('Are you sure you want to clear all song data? This cannot be undone.')) {
+                localStorage.removeItem('songData');
                 localStorage.removeItem('songs');
                 localStorage.removeItem('songSequences');
+                localStorage.removeItem('customSongTypes');
                 alert('All data has been cleared.');
             }
         }

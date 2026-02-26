@@ -6,6 +6,10 @@
         // Load singers and song types on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSingers();
+            // Apply language to dynamic content
+            if (typeof applyLanguage === 'function') {
+                applyLanguage();
+            }
             loadSongTypes();
             setupSearchableDropdown('singerFilter', 'singerDropdown', singerList, 'singer');
             setupSearchableDropdown('songTypeFilter', 'songTypeDropdown', songTypeList, 'songType');
@@ -28,20 +32,23 @@
         }
 
         /**
-         * Load song types based on selected singer
+         * Load song types - same logic as songs-summary.js (no defaults)
          */
         function loadSongTypes() {
-            const songs = Object.values(getSongData());
+            // Get custom song types from localStorage
+            const customSongTypes = JSON.parse(localStorage.getItem('customSongTypes')) || [];
             
-            // Get unique song types
+            // Get song types from actual song data in localStorage
+            const songs = getSongData();
             const typeSet = new Set();
-            songs.forEach(song => {
+            Object.values(songs).forEach(song => {
                 if (song.songType) {
                     typeSet.add(song.songType);
                 }
             });
             
-            songTypeList = Array.from(typeSet).sort();
+            // Combine custom types and song data types (no defaults)
+            songTypeList = [...new Set([...customSongTypes, ...typeSet])].sort();
         }
 
         /**

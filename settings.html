@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Song List Manager</title>
+    <title data-en="Settings - Song List Manager" data-ja="設定 - 曲列表管理">Settings - Song List Manager</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/settings.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,7 +13,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-brand">
-                <span class="brand-icon">🎵</span>
+                <span class="brand-icon"><i class="fas fa-music"></i></span>
                 <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
             </a>
             <ul class="nav-menu">
@@ -27,13 +27,13 @@
 
     <div class="container">
         <div class="page-header">
-            <h1><span class="header-icon">⚙️</span> <span data-en="Settings" data-ja="設定">Settings</span></h1>
+            <h1><span class="header-icon"><i class="fas fa-cog"></i></span> <span data-en="Settings" data-ja="設定">Settings</span></h1>
         </div>
 
         <div class="settings-container">
             <!-- Success Message -->
             <div class="success-message" id="successMessage" role="status" aria-live="polite">
-                <i class="fas fa-check-circle" aria-hidden="true"></i> Settings saved successfully!
+                <i class="fas fa-check-circle" aria-hidden="true"></i> <span data-en="Settings saved successfully!" data-ja="設定が保存されました！">Settings saved successfully!</span>
             </div>
 
             <!-- YouTube Channel Settings -->
@@ -45,7 +45,7 @@
                         <i class="fas fa-link"></i> <span data-en="YouTube Channel URL" data-ja="YouTubeチャンネルURL">YouTube Channel URL</span>
                     </label>
                     <div class="current-value" id="currentChannelUrl">
-                        Current: <strong>Not set</strong>
+                        <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
                     </div>
                     <input type="text" id="youtubeChannelUrl" 
                            name="youtubeChannelUrl"
@@ -67,7 +67,7 @@
                         <i class="fas fa-tag"></i> <span data-en="Display Name" data-ja="表示名">Display Name</span>
                     </label>
                     <div class="current-value" id="currentChannelName">
-                        Current: <strong>Not set</strong>
+                        <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
                     </div>
                     <input type="text" id="channelName" 
                            name="channelName"
@@ -85,7 +85,7 @@
                         <i class="fas fa-video"></i> <span data-en="Preview Video URL (Optional)" data-ja="プレビュー動画URL (任意)">Preview Video URL (Optional)</span>
                     </label>
                     <div class="current-value" id="currentPreviewUrl">
-                        Current: <strong>Not set</strong>
+                        <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
                     </div>
                     <input type="text" id="previewUrl" 
                            name="previewUrl"
@@ -102,13 +102,6 @@
                 <button class="btn btn-primary" onclick="saveSettings()">
                     <i class="fas fa-save"></i> <span data-en="Save Settings" data-ja="設定を保存">Save Settings</span>
                 </button>
-                
-                <!-- Link to Stream Page -->
-                <div style="margin-top: 20px;">
-                    <a href="stream.html" target="_blank" class="btn btn-secondary" style="padding: 10px 20px;">
-                        <i class="fas fa-play-circle"></i> <span data-en="Go to Live Stream Page" data-ja="ライブ配信ページへ">Go to Live Stream Page</span>
-                    </a>
-                </div>
             </div>
 
             <!-- Data Management -->
@@ -118,6 +111,11 @@
                 <button class="btn btn-secondary" onclick="exportData()">
                     <i class="fas fa-download"></i> <span data-en="Export All Data" data-ja="全データをエクスポート">Export All Data</span>
                 </button>
+                
+                <button class="btn btn-secondary" onclick="document.getElementById('importDataInput').click()">
+                    <i class="fas fa-upload"></i> <span data-en="Import Data" data-ja="データをインポート">Import Data</span>
+                </button>
+                <input type="file" id="importDataInput" accept=".json" style="display: none;" onchange="importData(event)">
                 
                 <button class="btn btn-secondary" onclick="clearData()" style="margin-left: 10px;">
                     <i class="fas fa-trash"></i> <span data-en="Clear All Data" data-ja="全データを削除">Clear All Data</span>

@@ -4,11 +4,22 @@
 
 // Data storage functions
 function getSongData() {
-    return JSON.parse(localStorage.getItem('songData')) || {};
+    try {
+        const data = localStorage.getItem('songData');
+        return data ? JSON.parse(data) : {};
+    } catch (error) {
+        console.error('Error reading song data:', error);
+        return {};
+    }
 }
 
 function saveSongData(data) {
-    localStorage.setItem('songData', JSON.stringify(data));
+    try {
+        localStorage.setItem('songData', JSON.stringify(data));
+    } catch (error) {
+        console.error('Error saving song data:', error);
+        alert('Failed to save data. Storage may be full.');
+    }
 }
 
 /**
@@ -285,7 +296,38 @@ const translations = {
         'Song Summary': 'Song Summary',
         'Random Pick': 'Random Pick',
         'Settings': 'Settings',
+        'Settings - Song List Manager': 'Settings - Song List Manager',
         'Live Stream': 'Live Stream',
+        'Settings saved successfully!': 'Settings saved successfully!',
+        'Current:': 'Current:',
+        'Not set': 'Not set',
+        
+        // Settings page
+        'YouTube Channel': 'YouTube Channel',
+        'YouTube Channel URL': 'YouTube Channel URL',
+        'Display Name': 'Display Name',
+        'Preview Video URL (Optional)': 'Preview Video URL (Optional)',
+        'Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)': 'Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)',
+        'Custom name to display for the channel': 'Custom name to display for the channel',
+        'Enter a specific YouTube video URL to show as the main preview': 'Enter a specific YouTube video URL to show as the main preview',
+        'Save Settings': 'Save Settings',
+        'Go to Live Stream Page': 'Go to Live Stream Page',
+        'Data Management': 'Data Management',
+        'Export All Data': 'Export All Data',
+        'Import Data': 'Import Data',
+        'Clear All Data': 'Clear All Data',
+        
+        // Alert messages
+        'Please enter some songs to import': 'Please enter some songs to import',
+        'No valid songs found to import': 'No valid songs found to import',
+        'No songs to import': 'No songs to import',
+        'Successfully imported': 'Successfully imported',
+        'songs!': 'songs!',
+        'Please enter a song name': 'Please enter a song name',
+        'Song added successfully!': 'Song added successfully!',
+        'No valid songs found in the file': 'No valid songs found in the file',
+        'No valid songs found in the Excel file': 'No valid songs found in the Excel file',
+        'Error reading Excel file. Please make sure the file format is correct.': 'Error reading Excel file. Please make sure the file format is correct.',
         'Import': 'Import',
         'All Songs': 'All Songs',
         'By Date': 'By Date',
@@ -382,7 +424,38 @@ const translations = {
         'Song Summary': '曲まとめ',
         'Random Pick': 'ランダムピック',
         'Settings': '設定',
+        'Settings - Song List Manager': '設定 - 曲列表管理',
         'Live Stream': 'ライブ配信',
+        'Settings saved successfully!': '設定が保存されました！',
+        'Current:': '現在:',
+        'Not set': '未設定',
+        
+        // Settings page
+        'YouTube Channel': 'YouTubeチャンネル',
+        'YouTube Channel URL': 'YouTubeチャンネルURL',
+        'Display Name': '表示名',
+        'Preview Video URL (Optional)': 'プレビュー動画URL (任意)',
+        'Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)': 'YouTubeチャンネルURLを入力 (例: https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)',
+        'Custom name to display for the channel': 'チャンネルに表示するカスタム名',
+        'Enter a specific YouTube video URL to show as the main preview': 'メインプレビューとして表示するYouTube動画URLを入力',
+        'Save Settings': '設定を保存',
+        'Go to Live Stream Page': 'ライブ配信ページへ',
+        'Data Management': 'データ管理',
+        'Export All Data': '全データをエクスポート',
+        'Import Data': 'データをインポート',
+        'Clear All Data': '全データを削除',
+        
+        // Alert messages
+        'Please enter some songs to import': 'インポートする曲を入力してください',
+        'No valid songs found to import': 'インポートする有効な曲が見つかりません',
+        'No songs to import': 'インポートする曲がありません',
+        'Successfully imported': '正常にインポートしました',
+        'songs!': '件の曲!',
+        'Please enter a song name': '曲名を入力してください',
+        'Song added successfully!': '曲が正常に追加されました！',
+        'No valid songs found in the file': 'ファイル内に有効な曲が見つかりません',
+        'No valid songs found in the Excel file': 'Excelファイル内に有効な曲が見つかりません',
+        'Error reading Excel file. Please make sure the file format is correct.': 'Excelファイルの読み取りエラー。ファイル形式が正しいことを確認してください。',
         'Import': 'インポート',
         'All Songs': '全曲',
         'By Date': '日付順',
@@ -411,7 +484,6 @@ const translations = {
         'Choose File': 'ファイルを選択',
         'Download Template': 'テンプレートダウンロード',
         'Supported formats': '対応形式',
-        'Add Song': '追加',
         
         // All Songs page
         'Filter by song name, singer, or date...': '曲名、歌手、日付で検索...',
@@ -515,6 +587,15 @@ function applyLanguage() {
             el.textContent = translations[currentLang][key];
         }
     });
+    
+    // Update page title with data-en and data-ja attributes
+    const titleEl = document.querySelector('title[data-en]');
+    if (titleEl) {
+        const key = titleEl.getAttribute('data-en');
+        if (translations[currentLang] && translations[currentLang][key]) {
+            document.title = translations[currentLang][key];
+        }
+    }
     
     // Update placeholders with data-en-placeholder and data-ja-placeholder
     document.querySelectorAll('[data-en-placeholder]').forEach(el => {

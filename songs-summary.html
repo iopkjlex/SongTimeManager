@@ -15,7 +15,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-brand">
-                <span class="brand-icon">🎵</span>
+                <span class="brand-icon"><i class="fas fa-music"></i></span>
                 <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
             </a>
             <ul class="nav-menu">
@@ -29,13 +29,13 @@
 
     <div class="container" id="main-content">
         <div class="page-header">
-            <h1><span class="header-icon">📋</span> <span data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></h1>
+            <h1><span class="header-icon"><i class="fas fa-clipboard-list"></i></span> <span data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></h1>
             <div class="btn-group">
                 <button class="btn btn-export" onclick="exportToXLSX()">
-                    <span class="btn-icon">📥</span> <span data-en="Export XLSX" data-ja="XLSXエクスポート">Export XLSX</span>
+                    <span class="btn-icon"><i class="fas fa-download"></i></span> <span data-en="Export XLSX" data-ja="XLSXエクスポート">Export XLSX</span>
                 </button>
                 <button class="btn btn-export" onclick="exportToCSV()">
-                    <span class="btn-icon">📋</span> <span data-en="Export CSV" data-ja="CSVエクスポート">Export CSV</span>
+                    <span class="btn-icon"><i class="fas fa-file-csv"></i></span> <span data-en="Export CSV" data-ja="CSVエクスポート">Export CSV</span>
                 </button>
             </div>
         </div>
@@ -63,7 +63,7 @@
                 <div class="stat-card stat-card-blue">
                     <div class="stat-header-row">
                         <div class="stat-icon-wrap">
-                            <span class="stat-emoji">🎤</span>
+                            <i class="fas fa-microphone"></i>
                         </div>
                         <div class="stat-number-wrap">
                             <div class="number" id="uniqueSongs">0</div>
@@ -71,14 +71,14 @@
                     </div>
                     <div class="stat-content">
                         <div class="label">
-                            <span class="label-icon">🎵</span> <span data-en="Unique Song & Singer Groups" data-ja="ユニークな曲と歌手グループ">Unique Song & Singer Groups</span>
+                            <i class="fas fa-music"></i> <span data-en="Unique Song & Singer Groups" data-ja="ユニークな曲と歌手グループ">Unique Song & Singer Groups</span>
                         </div>
                     </div>
                 </div>
-                <div class="stat-card stat-card-purple">
+                <div class="stat-card stat-card-orange">
                     <div class="stat-header-row">
                         <div class="stat-icon-wrap">
-                            <span class="stat-emoji">▶️</span>
+                            <i class="fas fa-play"></i>
                         </div>
                         <div class="stat-number-wrap">
                             <div class="number" id="totalPlays">0</div>
@@ -86,14 +86,14 @@
                     </div>
                     <div class="stat-content">
                         <div class="label">
-                            <span class="label-icon">🔥</span> <span data-en="Total Song Entries" data-ja="総曲数">Total Song Entries</span>
+                            <i class="fas fa-fire"></i> <span data-en="Total Song Entries" data-ja="総曲数">Total Song Entries</span>
                         </div>
                     </div>
                 </div>
                 <div class="stat-card stat-card-green">
                     <div class="stat-header-row">
                         <div class="stat-icon-wrap">
-                            <span class="stat-emoji">⭐</span>
+                            <i class="fas fa-star"></i>
                         </div>
                         <div class="stat-number-wrap">
                             <div class="number" id="uniqueSingers">0</div>
@@ -101,7 +101,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="label">
-                            <span class="label-icon">👤</span> <span data-en="Unique Singers" data-ja="ユニークな歌手数">Unique Singers</span>
+                            <i class="fas fa-user"></i> <span data-en="Unique Singers" data-ja="ユニークな歌手数">Unique Singers</span>
                         </div>
                     </div>
                 </div>
@@ -111,11 +111,11 @@
             <div class="charts-grid">
                 <div class="chart-card">
                     <div class="chart-header">
-                        <h3><span class="chart-icon">🥇</span> <span data-en="Top 10 Most Played Songs" data-ja="再生回数トップ10">Top 10 Most Played Songs</span></h3>
+                        <h3><i class="fas fa-trophy"></i> <span data-en="Top 10 Most Played Songs" data-ja="再生回数トップ10">Top 10 Most Played Songs</span></h3>
                     </div>
                     <div class="top-songs-list" id="topSongsList">
                         <div class="empty-state">
-                            <span class="empty-emoji">🎶</span>
+                            <i class="fas fa-music"></i>
                             <p><span data-en="No data yet" data-ja="データがありません">No data yet</span></p>
                         </div>
                     </div>
@@ -123,11 +123,11 @@
 
                 <div class="chart-card">
                     <div class="chart-header">
-                        <h3><span class="chart-icon">🎤</span> <span data-en="Top Singers" data-ja="歌手ランキング">Top Singers</span></h3>
+                        <h3><i class="fas fa-microphone"></i> <span data-en="Top Singers" data-ja="歌手ランキング">Top Singers</span></h3>
                     </div>
                     <div class="top-songs-list" id="topSingersList">
                         <div class="empty-state">
-                            <span class="empty-emoji">🎤</span>
+                            <i class="fas fa-user"></i>
                             <p><span data-en="No data yet" data-ja="データがありません">No data yet</span></p>
                         </div>
                     </div>
@@ -137,11 +137,11 @@
             <!-- Recent Activity -->
             <div class="card">
                 <div class="card-header">
-                    <h2><span class="card-icon">🕐</span> <span data-en="Recently Added" data-ja="最近追加">Recently Added</span></h2>
+                    <h2><i class="fas fa-clock"></i> <span data-en="Recently Added" data-ja="最近追加">Recently Added</span></h2>
                 </div>
                 <div class="list-container" id="recentActivity">
                     <div class="empty-state">
-                        <span class="empty-emoji">📝</span>
+                        <i class="fas fa-edit"></i>
                         <p><span data-en="No recent activity" data-ja="最近の活動はありません">No recent activity</span></p>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                 <!-- Manual Import -->
                 <div class="card">
                     <div class="card-header">
-                        <h2><span class="card-icon">➕</span> <span data-en="Add Single Song" data-ja="单曲追加">Add Single Song</span></h2>
+                        <h2><i class="fas fa-plus-circle"></i> <span data-en="Add Single Song" data-ja="单曲追加">Add Single Song</span></h2>
                     </div>
 
                     <form onsubmit="addSingleSong(event)">
@@ -223,7 +223,7 @@
                 <!-- Bulk Import -->
                 <div class="card" style="display: flex; flex-direction: column;">
                     <div class="card-header">
-                        <h2><span class="card-icon">📋</span> <span data-en="Bulk Import" data-ja="一括インポート">Bulk Import</span></h2>
+                        <h2><i class="fas fa-clipboard-list"></i> <span data-en="Bulk Import" data-ja="一括インポート">Bulk Import</span></h2>
                     </div>
 
                     <div class="form-group">
@@ -249,7 +249,7 @@
             <!-- File Import -->
             <div class="card" style="margin-top: 25px;">
                 <div class="card-header">
-                    <h2><span class="card-icon">📁</span> <span data-en="Import from File" data-ja="ファイルからインポート">Import from File</span></h2>
+                    <h2><i class="fas fa-folder-open"></i> <span data-en="Import from File" data-ja="ファイルからインポート">Import from File</span></h2>
                 </div>
 
                 <div class="form-group">
@@ -279,11 +279,17 @@
         <div id="allsongs" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <h2><span class="card-icon">🎵</span> <span data-en="All Songs" data-ja="全曲">All Songs</span></h2>
+                    <h2><i class="fas fa-music"></i> <span data-en="All Songs" data-ja="全曲">All Songs</span></h2>
+                </div>
+                <div class="actions-bar">
+                    <div class="searchable-dropdown" style="flex: 1; max-width: 250px;">
+                        <input type="text" id="songTypeFilter" name="songTypeFilter" data-en-placeholder="Filter by song type..." data-ja-placeholder="曲タイプでフィルター..." placeholder="Filter by song type..." autocomplete="off">
+                        <div class="dropdown-list" id="songTypeFilterDropdown"></div>
+                    </div>
                 </div>
                 <div class="list-container" id="allSongsList">
                     <div class="empty-state">
-                        <span class="empty-emoji">🎶</span>
+                        <i class="fas fa-music"></i>
                         <p><span data-en="No songs yet" data-ja="曲がありません">No songs yet</span></p>
                     </div>
                 </div>
@@ -298,7 +304,7 @@
                 </div>
                 <div class="list-container" id="songsList">
                     <div class="empty-state">
-                        <span class="empty-emoji">📅</span>
+                        <i class="fas fa-calendar"></i>
                         <p><span data-en="No songs yet" data-ja="曲がありません">No songs yet</span></p>
                     </div>
                 </div>

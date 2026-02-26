@@ -6,7 +6,7 @@
     <title>Song List Manager</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="lib/font-awesome.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -89,7 +89,7 @@
             if (!channelSettings || (!channelSettings.channelUrl && !channelSettings.previewUrl)) {
                 container.innerHTML = `
                     <div class="setup-prompt">
-                        <i class="fas fa-cog"></i>
+                        <i class="fas fa-cog" aria-hidden="true"></i>
                         <h2>Channel Not Configured</h2>
                         <p>Please set up your YouTube channel URL in Settings first.</p>
                         <a href="settings.html">
@@ -114,7 +114,7 @@
                     container.innerHTML = `
                         <div class="channel-info">
                             <div class="channel-avatar">
-                                <i class="fab fa-youtube"></i>
+                                <i class="fab fa-youtube" aria-hidden="true"></i>
                             </div>
                             <a href="${channelUrl}" target="_blank" class="channel-details">
                                 <h1>${channelName}</h1>
@@ -126,7 +126,7 @@
                                 <div class="video-card-thumbnail">
                                     <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="Preview Video" width="1280" height="720">
                                     <div class="video-card-play" style="opacity: 1; width: 80px; height: 80px; font-size: 32px;">
-                                        <i class="fas fa-play"></i>
+                                        <i class="fas fa-play" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </a>
@@ -148,7 +148,7 @@
             container.innerHTML = `
                 <div class="channel-info">
                     <div class="channel-avatar">
-                        <i class="fab fa-youtube"></i>
+                        <i class="fab fa-youtube" aria-hidden="true"></i>
                     </div>
                     <a href="${channelUrl}" target="_blank" class="channel-details">
                         <h1>${channelName}</h1>
@@ -157,7 +157,7 @@
 
                 <div class="video-grid" id="videoGrid">
                     <div class="loading">
-                        <i class="fas fa-spinner"></i>
+                        <i class="fas fa-spinner" aria-hidden="true"></i>
                     </div>
                 </div>
             `;
@@ -171,7 +171,7 @@
             
             container.innerHTML = `
                 <div class="loading">
-                    <i class="fas fa-spinner"></i>
+                    <i class="fas fa-spinner" aria-hidden="true"></i>
                 </div>
             `;
             
@@ -195,7 +195,7 @@
                     container.innerHTML = `
                         <div class="channel-info">
                             <div class="channel-avatar">
-                                <i class="fab fa-youtube"></i>
+                                <i class="fab fa-youtube" aria-hidden="true"></i>
                             </div>
                             <a href="${channelUrl}" target="_blank" class="channel-details">
                                 <h1>${channelName}</h1>
@@ -207,7 +207,7 @@
                                 <div class="video-card-thumbnail">
                                     <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="${title}">
                                     <div class="video-card-play" style="opacity: 1; width: 80px; height: 80px; font-size: 32px;">
-                                        <i class="fas fa-play"></i>
+                                        <i class="fas fa-play" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </a>
@@ -259,7 +259,7 @@
                     <div class="video-card-thumbnail">
                         <img src="${v.thumbnail}" alt="${v.title}">
                         <div class="video-card-play">
-                            <i class="fas fa-play"></i>
+                            <i class="fas fa-play" aria-hidden="true"></i>
                         </div>
                     </div>
                     <div class="video-card-info">

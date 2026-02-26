@@ -8,14 +8,8 @@
         function loadSettings() {
             channelSettings = JSON.parse(localStorage.getItem('youtubeChannelSettings')) || null;
             
-            // Use default video if no settings configured
-            if (!channelSettings || (!channelSettings.channelUrl && !channelSettings.previewUrl)) {
-                channelSettings = {
-                    previewUrl: DEFAULT_VIDEO_URL,
-                    channelName: '苺咲べりぃ / Maisaki Berry',
-                    channelUrl: 'https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ'
-                };
-            }
+            // Use exactly what's saved in settings (no fallback defaults)
+            // If settings are empty, channelSettings will be null or have empty values
         }
         
         function extractVideoId(url) {

@@ -36,7 +36,7 @@ body {
 
 /* Focus States - Visible focus indicators */
 :focus-visible {
-    outline: 2px solid #00d9ff;
+    outline: 2px solid rgba(255, 255, 255, 0.15);
     outline-offset: 2px;
 }
 
@@ -50,7 +50,7 @@ body {
 .btn-pick:hover,
 .btn-export:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
 }
 
 .btn:active,
@@ -61,7 +61,7 @@ body {
 
 /* Link hover states */
 a:hover {
-    color: #00d9ff;
+    color: rgba(255, 255, 255, 0.15);
 }
 
 /* Reduced Motion Support */
@@ -98,7 +98,7 @@ body::before {
     height: 200%;
     background: 
         radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(255, 0, 128, 0.05) 0%, transparent 40%);
     pointer-events: none;
     z-index: -1;
@@ -168,7 +168,7 @@ body::before {
 }
 
 .nav-brand span:last-child {
-    background: linear-gradient(90deg, #00d9ff, #ff6b35);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), #ff6b35);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -459,7 +459,7 @@ body::before {
 }
 
 .chart-card:hover {
-    border-color: rgba(0, 217, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -578,7 +578,7 @@ body::before {
 .plays-count {
     font-size: 1.3rem;
     font-weight: bold;
-    color: #00d9ff;
+    color: rgba(255, 255, 255, 0.15);
     line-height: 1;
 }
 
@@ -734,7 +734,7 @@ html {
 
 .list-item:hover {
     background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(0, 217, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateX(5px);
 }
 
@@ -745,13 +745,13 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.2));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(168, 85, 247, 0.2));
     flex-shrink: 0;
 }
 
 .list-item-icon i {
     font-size: 1.3rem;
-    color: #00d9ff;
+    color: rgba(255, 255, 255, 0.15);
 }
 
 /* Sequence Badge */
@@ -791,9 +791,9 @@ html {
 }
 
 .list-item-actions button:hover {
-    background: #00d9ff;
+    background: rgba(255, 255, 255, 0.15);
     color: #1a1a2e;
-    border-color: #00d9ff;
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .list-item-actions button.delete:hover {
@@ -823,7 +823,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.2));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(168, 85, 247, 0.2));
     flex-shrink: 0;
 }
 
@@ -897,9 +897,9 @@ html {
 
 .searchable-dropdown input:focus {
     outline: none;
-    border-color: #00d9ff;
-    background: rgba(0, 217, 255, 0.05);
-    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 .searchable-dropdown .dropdown-list {
@@ -992,7 +992,7 @@ html {
 
 .btn:hover {
     background: rgba(255, 255, 255, 0.2);
-    border-color: #00d9ff;
+    border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
 }
 
@@ -1022,8 +1022,8 @@ html {
 
 .filter-input:focus {
     outline: none;
-    border-color: #00d9ff;
-    background: rgba(0, 217, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .sort-btn {
@@ -1069,7 +1069,7 @@ html {
 }
 
 .form-group label i {
-    color: #00d9ff;
+    color: rgba(255, 255, 255, 0.15);
     width: 16px;
 }
 
@@ -1097,9 +1097,9 @@ input::placeholder, textarea::placeholder {
 
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #00d9ff;
-    background: rgba(0, 217, 255, 0.05);
-    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 /* Hide number input spinner buttons */

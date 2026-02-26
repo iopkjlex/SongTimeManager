@@ -11,32 +11,8 @@
         function loadSettings() {
             const settings = JSON.parse(localStorage.getItem('youtubeChannelSettings')) || {};
             
-            // Update channel URL display
-            const channelUrlEl = document.getElementById('currentChannelUrl');
-            if (settings.channelUrl) {
-                const currentText = translations[currentLang]?.['Current:'] || 'Current:';
-                channelUrlEl.innerHTML = `${currentText} <strong></strong>`;
-                channelUrlEl.querySelector('strong').textContent = settings.channelUrl;
-                document.getElementById('youtubeChannelUrl').value = settings.channelUrl;
-            }
-            
-            // Update channel name display
-            const channelNameEl = document.getElementById('currentChannelName');
-            if (settings.channelName) {
-                const currentText = translations[currentLang]?.['Current:'] || 'Current:';
-                channelNameEl.innerHTML = `${currentText} <strong></strong>`;
-                channelNameEl.querySelector('strong').textContent = settings.channelName;
-                document.getElementById('channelName').value = settings.channelName;
-            }
-            
-            // Update preview URL display
-            const previewUrlEl = document.getElementById('currentPreviewUrl');
-            if (settings.previewUrl) {
-                const currentText = translations[currentLang]?.['Current:'] || 'Current:';
-                previewUrlEl.innerHTML = `${currentText} <strong></strong>`;
-                previewUrlEl.querySelector('strong').textContent = settings.previewUrl;
-                document.getElementById('previewUrl').value = settings.previewUrl;
-            }
+            // Update current displays
+            updateCurrentDisplays(settings);
             
             // Load preview if settings exist
             if (settings.channelId || settings.previewUrl) {
@@ -217,12 +193,7 @@
             const channelName = document.getElementById('channelName').value.trim();
             const previewUrl = document.getElementById('previewUrl').value.trim();
             
-            if (!channelUrl && !previewUrl) {
-                alert('Please enter a YouTube channel URL or preview video URL');
-                return;
-            }
-            
-            // Extract channel ID from URL
+            // Extract channel ID from URL (if URL is provided)
             let channelId = null;
             if (channelUrl) {
                 channelId = extractChannelId(channelUrl);
@@ -232,14 +203,23 @@
                 }
             }
             
+            // Allow saving empty settings (to clear)
             const settings = {
                 channelUrl: channelUrl,
                 channelId: channelId,
-                channelName: channelName || 'YouTube Channel',
+                channelName: channelName || '',
                 previewUrl: previewUrl
             };
             
             localStorage.setItem('youtubeChannelSettings', JSON.stringify(settings));
+            
+            // Clear the form fields after saving
+            document.getElementById('youtubeChannelUrl').value = '';
+            document.getElementById('channelName').value = '';
+            document.getElementById('previewUrl').value = '';
+            
+            // Update the "Current:" displays
+            updateCurrentDisplays(settings);
             
             // Show success message
             const successMsg = document.getElementById('successMessage');
@@ -249,8 +229,42 @@
                 successMsg.classList.remove('show');
             }, 3000);
             
-            // Load preview after saving
-            loadPreview(channelId, previewUrl);
+            // Load preview after saving (or clear it if empty)
+            if (channelId || previewUrl) {
+                loadPreview(channelId, previewUrl);
+            }
+        }
+        
+        function updateCurrentDisplays(settings) {
+            const currentText = translations[currentLang]?.['Current:'] || 'Current:';
+            const notSetText = translations[currentLang]?.['Not set'] || 'Not set';
+            
+            // Update channel URL display
+            const channelUrlEl = document.getElementById('currentChannelUrl');
+            if (settings.channelUrl) {
+                channelUrlEl.innerHTML = `${currentText} <strong></strong>`;
+                channelUrlEl.querySelector('strong').textContent = settings.channelUrl;
+            } else {
+                channelUrlEl.innerHTML = `${currentText} <strong>${notSetText}</strong>`;
+            }
+            
+            // Update channel name display
+            const channelNameEl = document.getElementById('currentChannelName');
+            if (settings.channelName) {
+                channelNameEl.innerHTML = `${currentText} <strong></strong>`;
+                channelNameEl.querySelector('strong').textContent = settings.channelName;
+            } else {
+                channelNameEl.innerHTML = `${currentText} <strong>${notSetText}</strong>`;
+            }
+            
+            // Update preview URL display
+            const previewUrlEl = document.getElementById('currentPreviewUrl');
+            if (settings.previewUrl) {
+                previewUrlEl.innerHTML = `${currentText} <strong></strong>`;
+                previewUrlEl.querySelector('strong').textContent = settings.previewUrl;
+            } else {
+                previewUrlEl.innerHTML = `${currentText} <strong>${notSetText}</strong>`;
+            }
         }
         
         function extractChannelId(url) {

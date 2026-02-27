@@ -1,403 +1,528 @@
+/* ================================================
+   Random Pick Page - Modern Vibrant Design
+   ================================================ */
 
-        .random-pick-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+.random-pick-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
 
-        .pick-controls {
-            background: var(--card-bg, #1e1e2e);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
+.pick-controls {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-xl, 16px);
+    padding: 28px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
 
-        .pick-controls h2 {
-            margin: 0 0 20px 0;
-            color: var(--text-color, #fff);
-            font-size: 1.3rem;
-        }
+.pick-controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    /* background: linear-gradient(90deg, #8b5cf6, #d946ef, #f43f5e); */
+}
 
-        .input-group {
-            display: flex;
-            gap: 16px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
+.pick-controls h2 {
+    margin: 0 0 24px 0;
+    color: #fff;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .input-field {
-            flex: 1;
-            min-width: 200px;
-        }
+.pick-controls h2::before {
+    /* content: '\f3b2'; */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    background: linear-gradient(135deg, #d946ef, #f43f5e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
-        .input-field label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-color, #fff);
-            font-weight: 500;
-        }
+.input-group {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
 
-        .input-field input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: var(--bg-color, #16161e);
-            color: var(--text-color, #fff);
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+.input-field {
+    flex: 1;
+    min-width: 200px;
+}
 
-        .input-field input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.4);
-        }
+.input-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
 
-        .input-field select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: var(--bg-color, #16161e);
-            color: var(--text-color, #fff);
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            cursor: pointer;
-        }
+.input-field input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 12px);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
 
-        .input-field select:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.4);
-        }
+.input-field input:focus {
+    outline: none;
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+}
 
-        .searchable-dropdown {
-            position: relative;
-        }
+.input-field select {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 12px);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
 
-        .searchable-dropdown input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: var(--bg-color, #16161e);
-            color: var(--text-color, #fff);
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            cursor: pointer;
-        }
+.input-field select:focus {
+    outline: none;
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
 
-        .searchable-dropdown input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.4);
-        }
+.searchable-dropdown {
+    position: relative;
+}
 
-        .dropdown-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #1e1e2e !important;
-            border: 2px solid #333 !important;
-            border-top: none !important;
-            border-radius: 0 0 8px 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-        }
+.searchable-dropdown input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 12px);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
 
-        .dropdown-list.show {
-            display: block;
-        }
+.searchable-dropdown input:focus {
+    outline: none;
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+}
 
-        .dropdown-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-            border-bottom: 1px solid #333;
-            color: #fff !important;
-        }
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md, 12px) var(--radius-md, 12px);
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
 
-        .dropdown-item:last-child {
-            border-bottom: none;
-        }
+.dropdown-list.show {
+    display: block;
+    animation: slideDown 0.2s ease;
+}
 
-        .dropdown-item:hover {
-            background: rgba(255, 255, 255, 0.15) !important;
-            color: white !important;
-        }
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .dropdown-item.selected {
-            background: var(--accent-color, rgba(255, 255, 255, 0.15));
-            color: white;
-        }
+.dropdown-item {
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+}
 
-        .btn-pick {
-            padding: 12px 32px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.dropdown-item:last-child {
+    border-bottom: none;
+}
 
-        .btn-pick:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
+.dropdown-item:hover {
+    background: rgba(139, 92, 246, 0.15);
+    color: #fff;
+    padding-left: 24px;
+}
 
-        .btn-pick:active {
-            transform: translateY(0);
-        }
+.dropdown-item.selected {
+    background: rgba(139, 92, 246, 0.25);
+    color: #fff;
+}
 
-        .result-container {
-            background: var(--card-bg, #1e1e2e);
-            border: 1px solid #333;
-            border-radius: 12px;
-            overflow: hidden;
-        }
+.btn-pick {
+    padding: 14px 36px;
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-md, 12px);
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
 
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 24px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            border-bottom: 1px solid #333;
-        }
+.btn-pick:hover {
+    transform: translateY(-3px);
+    background: rgba(139, 92, 246, 0.25);
+    border-color: rgba(139, 92, 246, 0.5);
+}
 
-        .result-header h3 {
-            margin: 0;
-            color: var(--text-color, #fff);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.btn-pick:active {
+    transform: translateY(0);
+}
 
-        .result-count {
-            background: var(--accent-color, rgba(255, 255, 255, 0.15));
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+.result-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-xl, 16px);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
 
-        .song-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 28px;
+    background: linear-gradient(135deg, rgba(217, 70, 239, 0.12) 0%, rgba(244, 63, 94, 0.1) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
 
-        .song-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 24px;
-            border-bottom: 1px solid #333;
-            transition: background 0.2s;
-        }
+.result-header h3 {
+    margin: 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
 
-        .song-item:last-child {
-            border-bottom: none;
-        }
+.result-header h3::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #10b981;
+}
 
-        .song-item:hover {
-            background: rgba(99, 102, 241, 0.05);
-        }
+.result-count {
+    background: linear-gradient(135deg, #d946ef, #f43f5e);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(217, 70, 239, 0.3);
+}
 
-        .song-number {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            border-radius: 50%;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-right: 16px;
-            flex-shrink: 0;
-        }
+.song-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 
-        .song-info {
-            flex: 1;
-        }
+.song-item {
+    display: flex;
+    align-items: center;
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.2s;
+    position: relative;
+}
 
-        .song-name {
-            font-weight: 600;
-            color: var(--text-color, #fff);
-            margin-bottom: 4px;
-        }
+.song-item:last-child {
+    border-bottom: none;
+}
 
-        .song-singer {
-            color: #888;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+/* Each song item gets different accent */
+.song-item:nth-child(1) { --song-accent: linear-gradient(180deg, #8b5cf6, #a855f7); }
+.song-item:nth-child(2) { --song-accent: linear-gradient(180deg, #06b6d4, #0ea5e9); }
+.song-item:nth-child(3) { --song-accent: linear-gradient(180deg, #10b981, #14b8a6); }
+.song-item:nth-child(4) { --song-accent: linear-gradient(180deg, #f59e0b, #f97316); }
+.song-item:nth-child(5) { --song-accent: linear-gradient(180deg, #f43f5e, #fb7185); }
 
-        .song-actions {
-            display: flex;
-            gap: 8px;
-        }
+.song-item:hover {
+    background: rgba(217, 70, 239, 0.06);
+}
 
-        .btn-icon-action {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: #888;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+.song-item:hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--song-accent);
+}
 
-        .btn-icon-action:hover {
-            background: var(--accent-color, rgba(255, 255, 255, 0.15));
-            border-color: var(--accent-color, rgba(255, 255, 255, 0.15));
-            color: white;
-        }
+.song-number {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #d946ef, #ec4899);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(217, 70, 239, 0.3);
+}
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
+.song-info {
+    flex: 1;
+}
 
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
+.song-name {
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+}
 
-        .empty-state p {
-            margin: 0 0 8px 0;
-            font-size: 1.1rem;
-        }
+.song-singer {
+    color: var(--text-secondary, #a1a1aa);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-        .empty-state .empty-subtext {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
+.song-singer::before {
+    content: '\f007';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+    color: #d946ef;
+}
 
-        .animation-container {
-            position: relative;
-        }
+.song-actions {
+    display: flex;
+    gap: 8px;
+}
 
-        .picking-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
+.btn-icon-action {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm, 8px);
+    color: #a0a0a0;
+    cursor: pointer;
+    transition: all 0.2s;
+}
 
-        .picking-animation .song-name-display {
-            font-size: 2rem;
-            color: white;
-            text-align: center;
-            padding: 0 20px;
-            max-width: 600px;
-            word-wrap: break-word;
-        }
+.btn-icon-action:hover {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.4);
+    color: #e0e0e0;
+    transform: translateY(-2px);
+}
 
-        .picking-animation .song-singer-display {
-            font-size: 1.2rem;
-            color: #888;
-            margin-top: 8px;
-        }
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary, #a1a1aa);
+    background: rgba(255, 255, 255, 0.01);
+}
 
-        .picking-dots {
-            display: flex;
-            gap: 8px;
-            margin-top: 32px;
-        }
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    /* background: linear-gradient(135deg, #d946ef, #f59e0b); */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.7;
+    display: block;
+}
 
-        .picking-dots span {
-            width: 12px;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
+.empty-state p {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
 
-        .picking-dots span:nth-child(1) { animation-delay: -0.32s; }
-        .picking-dots span:nth-child(2) { animation-delay: -0.16s; }
-        .picking-dots span:nth-child(3) { animation-delay: 0s; }
+.empty-state .empty-subtext {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #a1a1aa);
+}
 
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
+.animation-container {
+    position: relative;
+}
 
-        .btn-copy-all {
-            padding: 8px 16px;
-            background: transparent;
-            border: 1px solid #444;
-            border-radius: 6px;
-            color: #888;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+.picking-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 15, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
 
-        .btn-copy-all:hover {
-            background: #333;
-            color: white;
-        }
+.picking-animation .song-name-display {
+    font-size: 2.2rem;
+    color: white;
+    text-align: center;
+    padding: 0 20px;
+    max-width: 600px;
+    word-wrap: break-word;
+    background: linear-gradient(90deg, #fff, #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+}
 
-        .song-type-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
+.picking-animation .song-singer-display {
+    font-size: 1.2rem;
+    color: var(--text-secondary, #a1a1aa);
+    margin-top: 12px;
+}
 
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #22c55e;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 500;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
+.picking-dots {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+}
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-    
+.picking-dots span {
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, #d946ef, #f43f5e);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.5);
+}
+
+.picking-dots span:nth-child(1) { animation-delay: -0.32s; }
+.picking-dots span:nth-child(2) { animation-delay: -0.16s; }
+.picking-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+.btn-copy-all {
+    padding: 10px 20px;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: var(--radius-sm, 8px);
+    color: #a78bfa;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-copy-all:hover {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.btn-copy-all::before {
+    content: '\f0c5';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+.song-type-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm, 8px);
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 10px;
+    vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: white;
+    padding: 14px 28px;
+    border-radius: var(--radius-md, 12px);
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}

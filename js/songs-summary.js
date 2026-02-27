@@ -21,9 +21,9 @@
             if (tabId === 'dashboard') {
                 loadDashboardData();
             } else if (tabId === 'allsongs') {
-                loadAllSongsData();
+                initAllSongsLazyLoad();
             } else if (tabId === 'bydate') {
-                loadSongsByDateData();
+                initSongsByDateLazyLoad();
             } else if (tabId === 'import') {
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('importDate').value = today;
@@ -31,6 +31,285 @@
                 document.getElementById('fileDate').value = today;
             }
         }
+
+        // ============ Lazy Loading for All Songs ============
+        const ITEMS_PER_PAGE = 50;
+        let allSongsPage = 0;
+        let allSongsHasMore = true;
+        let allSongsData = [];
+        let allSongsLoaded = false;
+
+        function initAllSongsLazyLoad() {
+            if (allSongsLoaded) return;
+            
+            allSongsPage = 0;
+            allSongsHasMore = true;
+            allSongsData = [];
+            allSongsLoaded = true;
+            
+            const songs = Object.values(getSongData());
+            
+            // Filter by song type if filter is set
+            const songTypeFilter = document.getElementById('songTypeFilter')?.value;
+            let filteredSongs = songTypeFilter ? songs.filter(song => song.songType === songTypeFilter) : songs;
+            
+            // Sort by count descending
+            filteredSongs.sort((a, b) => b.count - a.count);
+            allSongsData = filteredSongs;
+            
+            // Load first batch
+            loadMoreAllSongs();
+        }
+
+        function loadMoreAllSongs() {
+            const container = document.getElementById('allSongsList');
+            const start = allSongsPage * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const batch = allSongsData.slice(start, end);
+            
+            if (batch.length === 0) {
+                allSongsHasMore = false;
+                return;
+            }
+            
+            const html = batch.map(song => {
+                return `
+                <div class="list-item">
+                    <div class="list-item-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="list-item-info">
+                        <div class="list-item-name">${song.name}${song.nameEnglish ? ` (${song.nameEnglish})` : ''}${song.songType ? ` <span class="song-type-badge">${song.songType}</span>` : ''}</div>
+                        <div class="list-item-meta">
+                            <span><i class="fas fa-microphone"></i> ${song.singer || 'Unknown'}${song.singerEnglish ? ` (${song.singerEnglish})` : ''}</span>
+                            ${song.duration ? `<span><i class="fas fa-clock"></i> ${song.duration}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="list-item-count">${song.count}</div>
+                </div>
+            `}).join('');
+            
+            if (allSongsPage === 0) {
+                container.innerHTML = html;
+            } else {
+                container.innerHTML += html;
+            }
+            
+            allSongsPage++;
+            
+            if (end >= allSongsData.length) {
+                allSongsHasMore = false;
+            }
+            
+            // Add loading indicator if there's more data
+            updateAllSongsLoadingIndicator();
+        }
+
+        function updateAllSongsLoadingIndicator() {
+            const container = document.getElementById('allSongsList');
+            const existingIndicator = document.getElementById('allSongsLoadingIndicator');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+            
+            if (allSongsHasMore) {
+                const indicator = document.createElement('div');
+                indicator.id = 'allSongsLoadingIndicator';
+                indicator.className = 'lazy-load-indicator';
+                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading more...';
+                indicator.style.cssText = 'text-align: center; padding: 20px; color: var(--text-secondary); cursor: pointer;';
+                indicator.onclick = loadMoreAllSongs;
+                container.appendChild(indicator);
+            } else if (allSongsData.length > 0) {
+                const indicator = document.createElement('div');
+                indicator.id = 'allSongsLoadingIndicator';
+                indicator.className = 'lazy-load-indicator';
+                indicator.innerHTML = `<i class="fas fa-check"></i> Showing all ${allSongsData.length} songs`;
+                indicator.style.cssText = 'text-align: center; padding: 20px; color: var(--text-secondary);';
+                container.appendChild(indicator);
+            } else {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-music"></i>
+                        <p>No songs yet</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ============ Lazy Loading for Songs by Date ============
+        let byDatePage = 0;
+        let byDateHasMore = true;
+        let byDateData = [];
+        let byDateLoaded = false;
+
+        function initSongsByDateLazyLoad() {
+            if (byDateLoaded) return;
+            
+            byDatePage = 0;
+            byDateHasMore = true;
+            byDateData = [];
+            byDateLoaded = true;
+            
+            const songs = getSongData();
+            
+            // Get all entries with their dates
+            let allEntries = [];
+            Object.values(songs).forEach(song => {
+                if (song.entries && song.entries.length > 0) {
+                    song.entries.forEach(entry => {
+                        allEntries.push({
+                            name: song.name,
+                            nameEnglish: song.nameEnglish || entry.nameEnglish || '',
+                            singer: song.singer,
+                            singerEnglish: song.singerEnglish || entry.singerEnglish || '',
+                            songType: song.songType || entry.songType || '',
+                            duration: entry.duration,
+                            date: entry.date,
+                            sequence: entry.sequence || 0
+                        });
+                    });
+                }
+            });
+            
+            // Group by date
+            const groupedByDate = {};
+            allEntries.forEach(entry => {
+                const date = entry.date || 'Unknown';
+                if (!groupedByDate[date]) {
+                    groupedByDate[date] = [];
+                }
+                groupedByDate[date].push(entry);
+            });
+            
+            // Sort dates (newest first)
+            const dates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+            
+            // Store sorted dates with their entries
+            byDateData = dates.map(date => {
+                const entries = groupedByDate[date].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+                return { date, entries };
+            });
+            
+            // Load first batch
+            loadMoreSongsByDate();
+        }
+
+        function loadMoreSongsByDate() {
+            const container = document.getElementById('songsList');
+            const start = byDatePage * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const batch = byDateData.slice(start, end);
+            
+            if (byDateData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar"></i>
+                        <p>No songs yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (batch.length === 0) {
+                byDateHasMore = false;
+                return;
+            }
+            
+            const html = batch.map(group => {
+                return `
+                    <div class="date-group">
+                        <div class="date-header">
+                            <i class="fas fa-calendar"></i> ${formatDate(group.date)} (${group.entries.length} songs)
+                        </div>
+                        ${group.entries.map(entry => `
+                            <div class="list-item">
+                                <div class="list-item-sequence">#${entry.sequence || '-'}</div>
+                                <div class="list-item-icon">
+                                    <i class="fas fa-music"></i>
+                                </div>
+                                <div class="list-item-info">
+                                    <div class="list-item-name">${entry.name}${entry.nameEnglish ? ` (${entry.nameEnglish})` : ''}${entry.songType ? ` <span class="song-type-badge">${entry.songType}</span>` : ''}</div>
+                                    <div class="list-item-meta">
+                                        <span><i class="fas fa-microphone"></i> ${entry.singer || 'Unknown'}${entry.singerEnglish ? ` (${entry.singerEnglish})` : ''}</span>
+                                        ${entry.duration ? `<span><i class="fas fa-clock"></i> ${entry.duration}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+            
+            if (byDatePage === 0) {
+                container.innerHTML = html;
+            } else {
+                container.innerHTML += html;
+            }
+            
+            byDatePage++;
+            
+            if (end >= byDateData.length) {
+                byDateHasMore = false;
+            }
+            
+            // Add loading indicator if there's more data
+            updateSongsByDateLoadingIndicator();
+        }
+
+        function updateSongsByDateLoadingIndicator() {
+            const container = document.getElementById('songsList');
+            const existingIndicator = document.getElementById('byDateLoadingIndicator');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+            
+            const totalSongs = byDateData.reduce((sum, group) => sum + group.entries.length, 0);
+            
+            if (byDateHasMore) {
+                const indicator = document.createElement('div');
+                indicator.id = 'byDateLoadingIndicator';
+                indicator.className = 'lazy-load-indicator';
+                indicator.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Load more (${totalSongs} songs total)...`;
+                indicator.style.cssText = 'text-align: center; padding: 20px; color: var(--text-secondary); cursor: pointer;';
+                indicator.onclick = loadMoreSongsByDate;
+                container.appendChild(indicator);
+            } else if (byDateData.length > 0) {
+                const indicator = document.createElement('div');
+                indicator.id = 'byDateLoadingIndicator';
+                indicator.className = 'lazy-load-indicator';
+                indicator.innerHTML = `<i class="fas fa-check"></i> Showing all ${totalSongs} songs`;
+                indicator.style.cssText = 'text-align: center; padding: 20px; color: var(--text-secondary);';
+                container.appendChild(indicator);
+            }
+        }
+
+        // ============ Scroll Detection ============
+        function setupLazyLoadScroll(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.addEventListener('scroll', function() {
+                const scrollTop = container.scrollTop;
+                const scrollHeight = container.scrollHeight;
+                const clientHeight = container.clientHeight;
+                
+                // Load more when within 100px of bottom
+                if (scrollHeight - scrollTop - clientHeight < 100) {
+                    if (containerId === 'allSongsList' && allSongsHasMore) {
+                        loadMoreAllSongs();
+                    } else if (containerId === 'songsList' && byDateHasMore) {
+                        loadMoreSongsByDate();
+                    }
+                }
+            });
+        }
+
+        // Setup scroll listeners when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            setupLazyLoadScroll('allSongsList');
+            setupLazyLoadScroll('songsList');
+        });
         
         // Reusable searchable dropdown functions (shared with random-pick.js)
         let songTypeList = [];
@@ -101,7 +380,8 @@
                 dropdown.classList.remove('show');
                 // Trigger reload of data
                 if (inputId === 'songTypeFilter') {
-                    loadAllSongsData();
+                    allSongsLoaded = false;
+                    initAllSongsLazyLoad();
                 }
             });
             dropdown.appendChild(allItem);
@@ -115,7 +395,8 @@
                     dropdown.classList.remove('show');
                     // Trigger reload of data
                     if (inputId === 'songTypeFilter') {
-                        loadAllSongsData();
+                        allSongsLoaded = false;
+                        initAllSongsLazyLoad();
                     }
                 });
                 dropdown.appendChild(div);
@@ -134,8 +415,11 @@
             
             const topSongsList = document.getElementById('topSongsList');
             if (songs.length > 0) {
-                topSongsList.innerHTML = songs.slice(0, 10).map(song => `
-                    <div class="list-item">
+                topSongsList.innerHTML = songs.slice(0, 10).map((song, index) => `
+                    <div class="list-item${index < 3 ? ' top-ranked' : ''}">
+                        <div class="list-item-rank${index < 3 ? ' rank-' + (index + 1) : ''}">
+                            ${index < 3 ? '<i class="fas fa-crown"></i>' : '<span>' + (index + 1) + '</span>'}
+                        </div>
                         <div class="list-item-icon">
                             <i class="fas fa-music"></i>
                         </div>
@@ -162,8 +446,11 @@
             const topSingersList = document.getElementById('topSingersList');
             
             if (sortedSingers.length > 0) {
-                topSingersList.innerHTML = sortedSingers.slice(0, 10).map(([singer, count]) => `
-                    <div class="list-item">
+                topSingersList.innerHTML = sortedSingers.slice(0, 10).map(([singer, count], index) => `
+                    <div class="list-item${index < 3 ? ' top-ranked' : ''}">
+                        <div class="list-item-rank${index < 3 ? ' rank-' + (index + 1) : ''}">
+                            ${index < 3 ? '<i class="fas fa-crown"></i>' : '<span>' + (index + 1) + '</span>'}
+                        </div>
                         <div class="list-item-icon">
                             <i class="fas fa-microphone"></i>
                         </div>
@@ -197,128 +484,6 @@
                     </div>
                 `).join('');
             }
-        }
-        
-        function loadAllSongsData() {
-            let songs = Object.values(getSongData());
-            
-            // Filter by song type if filter is set
-            const songTypeFilter = document.getElementById('songTypeFilter')?.value;
-            if (songTypeFilter) {
-                songs = songs.filter(song => song.songType === songTypeFilter);
-            }
-            
-            songs.sort((a, b) => b.count - a.count);
-            
-            const container = document.getElementById('allSongsList');
-            if (songs.length > 0) {
-                container.innerHTML = songs.map(song => {
-                    const key = `${song.name.toLowerCase()}_${song.singer.toLowerCase()}`;
-                    return `
-                    <div class="list-item">
-                        <div class="list-item-icon">
-                            <i class="fas fa-music"></i>
-                        </div>
-                        <div class="list-item-info">
-                            <div class="list-item-name">${song.name}${song.nameEnglish ? ` (${song.nameEnglish})` : ''}${song.songType ? ` <span class="song-type-badge">${song.songType}</span>` : ''}</div>
-                            <div class="list-item-meta">
-                                <span><i class="fas fa-microphone"></i> ${song.singer || 'Unknown'}${song.singerEnglish ? ` (${song.singerEnglish})` : ''}</span>
-                                ${song.duration ? `<span><i class="fas fa-clock"></i> ${song.duration}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="list-item-count">${song.count}</div>
-                        <div class="list-item-actions">
-                            <button class="delete" onclick="deleteSongFromAllSongs('${key}')" title="Delete all entries">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `}).join('');
-            }
-        }
-        
-        function deleteSongFromAllSongs(key) {
-            if (confirm('Are you sure you want to delete ALL entries of this song?')) {
-                deleteGroupedSong(key);
-                loadAllSongsData();
-                loadDashboardData();
-                loadSongsByDateData();
-            }
-        }
-        
-        function loadSongsByDateData() {
-            const songs = getSongData();
-            
-            // Get all entries with their dates
-            let allEntries = [];
-            Object.values(songs).forEach(song => {
-                if (song.entries && song.entries.length > 0) {
-                    song.entries.forEach(entry => {
-                        allEntries.push({
-                            name: song.name,
-                            nameEnglish: song.nameEnglish || entry.nameEnglish || '',
-                            singer: song.singer,
-                            singerEnglish: song.singerEnglish || entry.singerEnglish || '',
-                            songType: song.songType || entry.songType || '',
-                            duration: entry.duration,
-                            date: entry.date,
-                            sequence: entry.sequence || 0
-                        });
-                    });
-                }
-            });
-            
-            const container = document.getElementById('songsList');
-            
-            if (allEntries.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-calendar"></i>
-                        <p>No songs yet</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Group by date
-            const groupedByDate = {};
-            allEntries.forEach(entry => {
-                const date = entry.date || 'Unknown';
-                if (!groupedByDate[date]) {
-                    groupedByDate[date] = [];
-                }
-                groupedByDate[date].push(entry);
-            });
-            
-            // Sort dates (newest first)
-            const dates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
-            
-            container.innerHTML = dates.map(date => {
-                // Sort entries by sequence
-                const entries = groupedByDate[date].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
-                return `
-                    <div class="date-group">
-                        <div class="date-header">
-                            <i class="fas fa-calendar"></i> ${formatDate(date)} (${entries.length} songs)
-                        </div>
-                        ${entries.map(entry => `
-                            <div class="list-item">
-                                <div class="list-item-sequence">#${entry.sequence || '-'}</div>
-                                <div class="list-item-icon">
-                                    <i class="fas fa-music"></i>
-                                </div>
-                                <div class="list-item-info">
-                                    <div class="list-item-name">${entry.name}${entry.nameEnglish ? ` (${entry.nameEnglish})` : ''}${entry.songType ? ` <span class="song-type-badge">${entry.songType}</span>` : ''}</div>
-                                    <div class="list-item-meta">
-                                        <span><i class="fas fa-microphone"></i> ${entry.singer || 'Unknown'}${entry.singerEnglish ? ` (${entry.singerEnglish})` : ''}</span>
-                                        ${entry.duration ? `<span><i class="fas fa-clock"></i> ${entry.duration}</span>` : ''}
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }).join('');
         }
         
         // Bulk import functions
@@ -538,8 +703,10 @@
             
             // Refresh data
             loadDashboardData();
-            loadAllSongsData();
-            loadSongsByDateData();
+            allSongsLoaded = false;
+            byDateLoaded = false;
+            initAllSongsLazyLoad();
+            initSongsByDateLazyLoad();
         }
         
         function cancelImport() {
@@ -659,8 +826,10 @@
             
             // Refresh data
             loadDashboardData();
-            loadAllSongsData();
-            loadSongsByDateData();
+            allSongsLoaded = false;
+            byDateLoaded = false;
+            initAllSongsLazyLoad();
+            initSongsByDateLazyLoad();
         }
         
         function getNextSequence(date) {

@@ -1,125 +1,216 @@
+/* ================================================
+   Songs Summary Page - Colorful Modern Design
+   ================================================ */
 
-        .summary-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .summary-tab {
-            padding: 12px 24px;
-            background: var(--card-bg, #1e1e2e);
-            border: 2px solid #333;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-color, #fff);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .summary-tab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .summary-tab.active {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.5);
-            color: #ffffff;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .song-type-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-        
-        .date-group {
-            margin-bottom: 20px;
-        }
-        
-        /* Searchable dropdown - match regular input fields */
-        .searchable-dropdown input {
-            background: rgba(0, 0, 0, 0.3) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            color: #fff !important;
-            padding: 10px 12px !important;
-            border-radius: 6px !important;
-            font-size: 0.95rem !important;
-        }
-        
-        .searchable-dropdown input::placeholder {
-            color: #888 !important;
-        }
-        
-        .searchable-dropdown input:focus {
-            border-color: rgba(255, 255, 255, 0.15) !important;
-            outline: none;
-        }
-        
-        .searchable-dropdown .dropdown-list {
-            background: #1e1e2e !important;
-            border: 2px solid #333 !important;
-            border-top: none !important;
-            border-radius: 0 0 8px 8px !important;
-        }
-        
-        .searchable-dropdown .dropdown-item {
-            background: #1e1e2e !important;
-            color: #fff !important;
-            border-bottom: 1px solid #333 !important;
-        }
-        
-        .searchable-dropdown .dropdown-item:hover {
-            background: #333 !important;
-        }
-        
-        .date-header {
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 16px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.15);
-            margin-bottom: 10px;
-        }
-        
-        /* Stat Card Colors - Different subtle muted colors */
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        .stat-card-blue {
-            --card-color: #6b8aff;
-            background: linear-gradient(135deg, rgba(107, 138, 255, 0.15) 0%, rgba(107, 138, 255, 0.02) 100%) !important;
-            border-color: rgba(107, 138, 255, 0.3) !important;
-        }
-        
-        .stat-card-orange {
-            --card-color: #ff9f43;
-            background: linear-gradient(135deg, rgba(255, 159, 67, 0.15) 0%, rgba(255, 159, 67, 0.02) 100%) !important;
-            border-color: rgba(255, 159, 67, 0.3) !important;
-        }
-        
-        .stat-card-green {
-            --card-color: #69db7c;
-            background: linear-gradient(135deg, rgba(105, 219, 124, 0.15) 0%, rgba(105, 219, 124, 0.02) 100%) !important;
-            border-color: rgba(105, 219, 124, 0.3) !important;
-        }
-    
+.summary-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.summary-tab {
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 12px);
+    cursor: pointer;
+    color: #a0a0a0;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--tab-gradient);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.summary-tab:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139, 92, 246, 0.25);
+    color: #c0c0c0;
+}
+
+.summary-tab:hover::before {
+    opacity: 1;
+}
+
+/* Each tab has different colors - flat */
+.summary-tab:nth-child(1) { --tab-bg: rgba(139, 92, 246, 0.12); }
+.summary-tab:nth-child(2) { --tab-bg: rgba(139, 92, 246, 0.12); }
+.summary-tab:nth-child(3) { --tab-bg: rgba(139, 92, 246, 0.12); }
+.summary-tab:nth-child(4) { --tab-bg: rgba(139, 92, 246, 0.12); }
+
+.summary-tab.active {
+    background: rgba(139, 92, 246, 0.12);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.summary-tab.active::before {
+    opacity: 0;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.song-type-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: #ffffff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm, 8px);
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 8px;
+    vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.date-group {
+    margin-bottom: 24px;
+}
+
+/* Searchable dropdown - match regular input fields */
+.searchable-dropdown input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #fff !important;
+    padding: 14px 18px !important;
+    border-radius: var(--radius-md, 12px) !important;
+    font-size: 1rem !important;
+    transition: all 0.3s;
+}
+
+.searchable-dropdown input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+.searchable-dropdown input:focus {
+    border-color: rgba(139, 92, 246, 0.5) !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.searchable-dropdown .dropdown-list {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+    border-top: none !important;
+    border-radius: 0 0 var(--radius-md, 12px) var(--radius-md, 12px) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.searchable-dropdown .dropdown-item {
+    background: transparent !important;
+    color: #94a3b8 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 12px 18px !important;
+    transition: all 0.2s;
+}
+
+.searchable-dropdown .dropdown-item:last-child {
+    border-bottom: none !important;
+}
+
+.searchable-dropdown .dropdown-item:hover {
+    background: rgba(139, 92, 246, 0.15) !important;
+    color: #fff !important;
+    padding-left: 24px !important;
+}
+
+/* Different date header colors */
+.date-group:nth-child(1) .date-header { border-left-color: #8b5cf6; }
+.date-group:nth-child(1) .date-header::before { color: #8b5cf6; }
+.date-group:nth-child(2) .date-header { border-left-color: #06b6d4; }
+.date-group:nth-child(2) .date-header::before { color: #06b6d4; }
+.date-group:nth-child(3) .date-header { border-left-color: #10b981; }
+.date-group:nth-child(3) .date-header::before { color: #10b981; }
+.date-group:nth-child(4) .date-header { border-left-color: #f59e0b; }
+.date-group:nth-child(4) .date-header::before { color: #f59e0b; }
+
+.date-header {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(217, 70, 239, 0.06));
+    border-left: 4px solid #8b5cf6;
+    padding: 14px 20px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
+    border-radius: 0 var(--radius-md, 12px) var(--radius-md, 12px) 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-header::before {
+    content: '\f133';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #8b5cf6;
+    font-size: 0.9rem;
+}
+
+/* Stat Card Colors - Flat design */
+.stat-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: var(--radius-xl, 16px) !important;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #8b5cf6;
+}
+
+.stat-card:hover {
+    border-color: rgba(139, 92, 246, 0.4) !important;
+}
+
+/* Different stat card colors - flat */
+.stat-card-violet::before { background: #8b5cf6; }
+.stat-card-fuchsia::before { background: #d946ef; }
+.stat-card-emerald::before { background: #10b981; }
+.stat-card-cyan::before { background: #06b6d4; }
+.stat-card-amber::before { background: #f59e0b; }
+.stat-card-rose::before { background: #f43f5e; }
+.stat-card-blue::before { background: #3b82f6; }
+.stat-card-orange::before { background: #f97316; }
+.stat-card-green::before { background: #22c55e; }
+
+/* Animation for tabs */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

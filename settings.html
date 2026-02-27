@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/settings.css">
     <link rel="stylesheet" href="lib/font-awesome.min.css">
+    <script src="lib/xlsx.full.min.js"></script>
     
 </head>
 <body>
@@ -26,84 +27,252 @@
     </nav>
 
     <div class="container">
-        <div class="page-header">
+
+        <div class="page-flag-header">
             <h1><span class="header-icon"><i class="fas fa-cog"></i></span> <span data-en="Settings" data-ja="設定">Settings</span></h1>
         </div>
+        <!-- Tab Navigation -->
+        <div class="settings-tabs">
+            <button class="settings-tab active" onclick="showSettingsTab('youtube', event)">
+                <i class="fab fa-youtube"></i> <span data-en="YouTube Channel" data-ja="YouTubeチャンネル">YouTube Channel</span>
+            </button>
+            <button class="settings-tab" onclick="showSettingsTab('song-management', event)">
+                <i class="fas fa-music"></i> <span data-en="Song Management" data-ja="曲管理">Song Management</span>
+            </button>
+            <button class="settings-tab" onclick="showSettingsTab('data', event)">
+                <i class="fas fa-database"></i> <span data-en="Data" data-ja="データ">Data</span>
+            </button>
+        </div>
 
-        <div class="settings-container">
-            <!-- Success Message -->
-            <div class="success-message" id="successMessage" role="status" aria-live="polite">
-                <i class="fas fa-check-circle" aria-hidden="true"></i> <span data-en="Settings saved successfully!" data-ja="設定が保存されました！">Settings saved successfully!</span>
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage" role="status" aria-live="polite">
+            <i class="fas fa-check-circle" aria-hidden="true"></i> <span data-en="Settings saved successfully!" data-ja="設定が保存されました！">Settings saved successfully!</span>
+        </div>
+
+        <!-- YouTube Channel Settings Tab -->
+        <div id="youtube-tab" class="settings-tab-content active">
+            <h2><i class="fab fa-youtube"></i> <span data-en="YouTube Channel" data-ja="YouTubeチャンネル">YouTube Channel</span></h2>
+            
+            <div class="form-group">
+                <label for="youtubeChannelUrl">
+                    <i class="fas fa-link"></i> <span data-en="YouTube Channel URL" data-ja="YouTubeチャンネルURL">YouTube Channel URL</span>
+                </label>
+                <div class="current-value" id="currentChannelUrl">
+                    <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
+                </div>
+                <input type="text" id="youtubeChannelUrl" 
+                        name="youtubeChannelUrl"
+                        autocomplete="url"
+                        data-en-placeholder="https://www.youtube.com/channel/UC..." 
+                        data-ja-placeholder="https://www.youtube.com/channel/UC..."
+                        placeholder="https://www.youtube.com/channel/UC...">
+                <p class="help-text">
+                    <i class="fas fa-info-circle"></i>
+                    <span data-en="Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)" 
+                            data-ja="YouTubeチャンネルURLを入力 (例: https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)">
+                        Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)
+                    </span>
+                </p>
             </div>
 
-            <!-- YouTube Channel Settings -->
+            <div class="form-group">
+                <label for="channelName">
+                    <i class="fas fa-tag"></i> <span data-en="Display Name" data-ja="表示名">Display Name</span>
+                </label>
+                <div class="current-value" id="currentChannelName">
+                    <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
+                </div>
+                <input type="text" id="channelName" 
+                        name="channelName"
+                        autocomplete="organization-title"
+                        data-en-placeholder="My Channel" 
+                        data-ja-placeholder="マイチャンネル"
+                        placeholder="My Channel">
+                <p class="help-text">
+                    <span data-en="Custom name to display for the channel" data-ja="チャンネルに表示するカスタム名">Custom name to display for the channel</span>
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="previewUrl">
+                    <i class="fas fa-video"></i> <span data-en="Preview Video URL (Optional)" data-ja="プレビュー動画URL (任意)">Preview Video URL (Optional)</span>
+                </label>
+                <div class="current-value" id="currentPreviewUrl">
+                    <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
+                </div>
+                <input type="text" id="previewUrl" 
+                        name="previewUrl"
+                        autocomplete="url"
+                        data-en-placeholder="https://www.youtube.com/watch?v=..." 
+                        data-ja-placeholder="https://www.youtube.com/watch?v=..."
+                        placeholder="https://www.youtube.com/watch?v=...">
+                <p class="help-text">
+                    <span data-en="Enter a specific YouTube video URL to show as the main preview" data-ja="メインプレビューとして表示するYouTube動画URLを入力">Enter a specific YouTube video URL to show as the main preview</span>
+                </p>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i> <span data-en="Save Settings" data-ja="設定を保存">Save Settings</span>
+            </button>
+        </div>
+
+        <!-- Song Management Tab -->
+        <div id="song-management-tab" class="settings-tab-content">
             <div class="settings-section">
-                <h2><i class="fab fa-youtube"></i> <span data-en="YouTube Channel" data-ja="YouTubeチャンネル">YouTube Channel</span></h2>
+                <h2><i class="fas fa-music"></i> <span data-en="Song Management" data-ja="曲管理">Song Management</span></h2>
                 
-                <div class="form-group">
-                    <label for="youtubeChannelUrl">
-                        <i class="fas fa-link"></i> <span data-en="YouTube Channel URL" data-ja="YouTubeチャンネルURL">YouTube Channel URL</span>
-                    </label>
-                    <div class="current-value" id="currentChannelUrl">
-                        <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
+                <div class="song-management-header">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="songSearchInput" 
+                                data-en-placeholder="Search songs..." 
+                                data-ja-placeholder="曲を検索..."
+                                placeholder="Search songs..."
+                                oninput="filterSongList()">
                     </div>
-                    <input type="text" id="youtubeChannelUrl" 
-                           name="youtubeChannelUrl"
-                           autocomplete="url"
-                           data-en-placeholder="https://www.youtube.com/channel/UC..." 
-                           data-ja-placeholder="https://www.youtube.com/channel/UC..."
-                           placeholder="https://www.youtube.com/channel/UC...">
-                    <p class="help-text">
-                        <i class="fas fa-info-circle"></i>
-                        <span data-en="Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)" 
-                              data-ja="YouTubeチャンネルURLを入力 (例: https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)">
-                            Enter your YouTube channel URL (e.g., https://www.youtube.com/channel/UC7A7bGRVdIwo93nA3x-OQ)
-                        </span>
-                    </p>
+                    <div class="song-count">
+                        <span data-en="Total songs:" data-ja="総曲数:">Total songs:</span> <strong id="songTotalCount">0</strong>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="channelName">
-                        <i class="fas fa-tag"></i> <span data-en="Display Name" data-ja="表示名">Display Name</span>
-                    </label>
-                    <div class="current-value" id="currentChannelName">
-                        <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
+                <div class="song-list-container" id="songListContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-music"></i>
+                        <p data-en="No songs found" data-ja="曲が見つかりません">No songs found</p>
                     </div>
-                    <input type="text" id="channelName" 
-                           name="channelName"
-                           autocomplete="organization-title"
-                           data-en-placeholder="My Channel" 
-                           data-ja-placeholder="マイチャンネル"
-                           placeholder="My Channel">
-                    <p class="help-text">
-                        <span data-en="Custom name to display for the channel" data-ja="チャンネルに表示するカスタム名">Custom name to display for the channel</span>
-                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Tab -->
+        <div id="import-tab" class="settings-tab-content">
+            <div class="main-grid">
+                <!-- Manual Import -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-plus-circle"></i> <span data-en="Add Single Song" data-ja="单曲追加">Add Single Song</span></h2>
+                    </div>
+
+                    <form onsubmit="addSingleSong(event)">
+                        <div class="form-group">
+                            <label for="songName">
+                                <i class="fas fa-music"></i> <span data-en="Song Name (Japanese)" data-ja="曲名 (日本語)">Song Name (Japanese)</span> *
+                            </label>
+                            <input type="text" id="songName" name="songName" data-en-placeholder="Enter song name in Japanese" data-ja-placeholder="曲名を入力 (日本語)" placeholder="Enter song name in Japanese" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="songNameEnglish">
+                                <i class="fas fa-music"></i> <span data-en="Song Name (English)" data-ja="曲名 (英語)">Song Name (English)</span>
+                            </label>
+                            <input type="text" id="songNameEnglish" name="songNameEnglish" data-en-placeholder="Enter song name in English (optional)" data-ja-placeholder="曲名を入力 (英語/任意)" placeholder="Enter song name in English (optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="songSinger">
+                                <i class="fas fa-microphone"></i> <span data-en="Singer (Japanese)" data-ja="歌手 (日本語)">Singer (Japanese)</span>
+                            </label>
+                            <input type="text" id="songSinger" name="songSinger" data-en-placeholder="Enter singer name in Japanese" data-ja-placeholder="歌手名を入力 (日本語)" placeholder="Enter singer name in Japanese">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="songSingerEnglish">
+                                <i class="fas fa-microphone"></i> <span data-en="Singer (English)" data-ja="歌手 (英語)">Singer (English)</span>
+                            </label>
+                            <input type="text" id="songSingerEnglish" name="songSingerEnglish" data-en-placeholder="Enter singer name in English (optional)" data-ja-placeholder="歌手名を入力 (英語/任意)" placeholder="Enter singer name in English (optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="songType">
+                                <i class="fas fa-tag"></i> <span data-en="Song Type" data-ja="曲タイプ">Song Type</span>
+                            </label>
+                            <div class="searchable-dropdown">
+                                <input type="text" id="songType" name="songType" data-en-placeholder="Select or type new type..." data-ja-placeholder="タイプを選択または入力..." placeholder="Select or type new type..." autocomplete="off">
+                                <div class="dropdown-list" id="songTypeDropdown"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-clock"></i> <span data-en="Duration (Start ~ End)" data-ja="時間 (開始 ~ 終了)">Duration (Start ~ End)</span>
+                            </label>
+                            <div class="time-input-group">
+                                <input type="text" id="songStartTime" name="songStartTime" data-en-placeholder="00:06:15" data-ja-placeholder="00:06:15" placeholder="00:06:15">
+                                <span class="time-separator">~</span>
+                                <input type="text" id="songEndTime" name="songEndTime" data-en-placeholder="00:10:29" data-ja-placeholder="00:10:29" placeholder="00:10:29">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="importDate">
+                                <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
+                            </label>
+                            <input type="date" id="importDate" name="importDate">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-plus"></i> <span data-en="Add Song" data-ja="追加">Add Song</span>
+                        </button>
+                    </form>
                 </div>
 
-                <div class="form-group">
-                    <label for="previewUrl">
-                        <i class="fas fa-video"></i> <span data-en="Preview Video URL (Optional)" data-ja="プレビュー動画URL (任意)">Preview Video URL (Optional)</span>
-                    </label>
-                    <div class="current-value" id="currentPreviewUrl">
-                        <span data-en="Current:" data-ja="現在:">Current:</span> <strong><span data-en="Not set" data-ja="未設定">Not set</span></strong>
+                <!-- Bulk Import -->
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <div class="card-header">
+                        <h2><i class="fas fa-clipboard-list"></i> <span data-en="Bulk Import" data-ja="一括インポート">Bulk Import</span></h2>
                     </div>
-                    <input type="text" id="previewUrl" 
-                           name="previewUrl"
-                           autocomplete="url"
-                           data-en-placeholder="https://www.youtube.com/watch?v=..." 
-                           data-ja-placeholder="https://www.youtube.com/watch?v=..."
-                           placeholder="https://www.youtube.com/watch?v=...">
-                    <p class="help-text">
-                        <span data-en="Enter a specific YouTube video URL to show as the main preview" data-ja="メインプレビューとして表示するYouTube動画URLを入力">Enter a specific YouTube video URL to show as the main preview</span>
-                    </p>
-                </div>
 
-                <button class="btn btn-primary" onclick="saveSettings()">
-                    <i class="fas fa-save"></i> <span data-en="Save Settings" data-ja="設定を保存">Save Settings</span>
-                </button>
+                    <div class="form-group">
+                        <label for="bulkDate">
+                            <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
+                        </label>
+                        <input type="date" id="bulkDate" name="bulkDate">
+                    </div>
+
+                    <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+                        <label>
+                            <i class="fas fa-info-circle"></i> <span data-en="Format" data-ja="形式">Format</span>
+                        </label>
+                        <textarea id="bulkInput" name="bulkInput" style="flex: 1; min-height: 200px;" data-en-placeholder="Enter songs (one per line):&#10;&#10;Format 1 (with sequence): 00:06:33 ~ 00:10:19 01| しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;Format 2 (no sequence): 00:06:33 ~ 00:10:19 | しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;&#10;English names are optional: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ" data-ja-placeholder="曲を入力 (1行に1曲):&#10;&#10;形式1 (Seqあり): 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ&#10;形式2 (Seqなし): 00:06:33 ~ 00:10:19 | しらないうた | 苺咲べりぃ&#10;&#10;英語名は任意: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりぃ" placeholder="Enter songs (one per line):&#10;&#10;Format 1 (with sequence): 00:06:33 ~ 00:10:19 01| しらないうた(Shiranaiuta) | 苺咲べりぃ(Maisaki Berry)&#10;Format 2 (no sequence): 00:06:33 ~ 00:10:19 | しらないうた(Shiranaiuta) | 苺咲べりィ(Maisaki Berry)&#10;&#10;English names are optional: 00:06:33 ~ 00:10:19 01| しらないうた | 苺咲べりィ"></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="addBulkSongs()" style="width: 100%; margin-top: 15px;">
+                        <i class="fas fa-plus"></i> <span data-en="Import All" data-ja="全てインポート">Import All</span> (<span id="bulkCount">0</span> songs)
+                    </button>
+                </div>
             </div>
 
-            <!-- Data Management -->
+            <!-- File Import -->
+            <div class="card" style="margin-top: 25px;">
+                <div class="card-header">
+                    <h2><i class="fas fa-folder-open"></i> <span data-en="Import from File" data-ja="ファイルからインポート">Import from File</span></h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileDate">
+                        <i class="fas fa-calendar"></i> <span data-en="Date" data-ja="日付">Date</span>
+                    </label>
+                    <input type="date" id="fileDate" name="fileDate">
+                </div>
+
+                <div class="actions-bar">
+                    <input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls" onchange="importFromFile(event)" style="display: none;">
+                    <button class="btn" onclick="document.getElementById('fileInput').click()" aria-label="Choose file to import">
+                        <i class="fas fa-file-upload" aria-hidden="true"></i> <span data-en="Choose File" data-ja="ファイルを選択">Choose File</span>
+                    </button>
+                    <button class="btn" onclick="downloadTemplate()">
+                        <i class="fas fa-download"></i> <span data-en="Download Template" data-ja="テンプレートダウンロード">Download Template</span>
+                    </button>
+                </div>
+
+                <p style="color: #888; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> Supported formats: .txt, .csv, .xlsx
+                </p>
+            </div>
+        </div>
+
+        <!-- Data Management Tab -->
+        <div id="data-tab" class="settings-tab-content">
             <div class="settings-section">
                 <h2><i class="fas fa-database"></i> <span data-en="Data Management" data-ja="データ管理">Data Management</span></h2>
                 
@@ -121,9 +290,89 @@
                 </button>
             </div>
         </div>
+
+        <!-- Edit Song Modal -->
+        <div id="editSongModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-edit"></i> <span data-en="Edit Song" data-ja="曲を編集">Edit Song</span></h3>
+                    <button class="modal-close" onclick="closeEditSongModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editSongKey">
+                    <div class="form-group">
+                        <label for="editSongName">
+                            <i class="fas fa-music"></i> <span data-en="Song Name" data-ja="曲名">Song Name</span>
+                        </label>
+                        <input type="text" id="editSongName" 
+                               data-en-placeholder="Enter song name" 
+                               data-ja-placeholder="曲名を入力"
+                               placeholder="Enter song name">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSongNameEnglish">
+                            <i class="fas fa-music"></i> <span data-en="Song Name (English)" data-ja="曲名 (英語)">Song Name (English)</span>
+                        </label>
+                        <input type="text" id="editSongNameEnglish" 
+                               data-en-placeholder="Enter song name in English" 
+                               data-ja-placeholder="英語の曲名を入力"
+                               placeholder="Enter song name in English">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSongSinger">
+                            <i class="fas fa-microphone"></i> <span data-en="Singer" data-ja="歌手">Singer</span>
+                        </label>
+                        <input type="text" id="editSongSinger" 
+                               data-en-placeholder="Enter singer name" 
+                               data-ja-placeholder="歌手名を入力"
+                               placeholder="Enter singer name">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSongSingerEnglish">
+                            <i class="fas fa-microphone"></i> <span data-en="Singer (English)" data-ja="歌手 (英語)">Singer (English)</span>
+                        </label>
+                        <input type="text" id="editSongSingerEnglish" 
+                               data-en-placeholder="Enter singer name in English" 
+                               data-ja-placeholder="英語の歌手名を入力"
+                               placeholder="Enter singer name in English">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSongType">
+                            <i class="fas fa-tag"></i> <span data-en="Song Type" data-ja="曲タイプ">Song Type</span>
+                        </label>
+                        <input type="text" id="editSongType" 
+                               data-en-placeholder="e.g., Opening, Ending, Cover" 
+                               data-ja-placeholder="例: Opening, Ending, Cover"
+                               placeholder="e.g., Opening, Ending, Cover">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSongDuration">
+                            <i class="fas fa-clock"></i> <span data-en="Duration" data-ja="長さ">Duration</span>
+                        </label>
+                        <input type="text" id="editSongDuration" 
+                               data-en-placeholder="e.g., 00:00:00 ~ 00:04:30" 
+                               data-ja-placeholder="例: 00:00:00 ~ 00:04:30"
+                               placeholder="e.g., 00:00:00 ~ 00:04:30">
+                    </div>
+                    <p class="help-text">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-en="Editing will update all song entries with the same name and singer." data-ja="同じ曲名と歌手のすべての曲エントリが更新されます。">Editing will update all song entries with the same name and singer.</span>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeEditSongModal()">
+                        <i class="fas fa-times"></i> <span data-en="Cancel" data-ja="キャンセル">Cancel</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="saveEditedSong()">
+                        <i class="fas fa-save"></i> <span data-en="Save Changes" data-ja="変更を保存">Save Changes</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/app.js"></script>
     <script src="js/settings.js"></script>
+    <script src="js/songs-summary.js"></script>
 </body>
 </html>

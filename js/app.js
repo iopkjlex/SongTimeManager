@@ -60,7 +60,29 @@ function groupSongs(songs) {
 function formatDate(dateStr) {
     if (!dateStr) return 'No date';
     try {
-        const date = new Date(dateStr);
+        let date;
+        
+        // Check if it's a string that looks like a number (Excel serial date)
+        if (typeof dateStr === 'string' && /^\d+$/.test(dateStr)) {
+            // Excel serial date: days since 1900-01-01
+            const serial = parseInt(dateStr, 10);
+            // Convert Excel serial date to JavaScript date
+            // Excel epoch is 1899-12-30 (for JavaScript Date compatibility)
+            const excelEpoch = new Date(1899, 11, 30);
+            date = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
+        } else if (typeof dateStr === 'number') {
+            // Already a number - treat as Excel serial
+            const excelEpoch = new Date(1899, 11, 30);
+            date = new Date(excelEpoch.getTime() + dateStr * 24 * 60 * 60 * 1000);
+        } else {
+            date = new Date(dateStr);
+        }
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+            return dateStr;
+        }
+        
         return date.toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'short', 
@@ -313,9 +335,30 @@ const translations = {
         'Save Settings': 'Save Settings',
         'Go to Live Stream Page': 'Go to Live Stream Page',
         'Data Management': 'Data Management',
+        'Data': 'Data',
         'Export All Data': 'Export All Data',
         'Import Data': 'Import Data',
         'Clear All Data': 'Clear All Data',
+        
+        // Song Management
+        'Song Management': 'Song Management',
+        'Search songs...': 'Search songs...',
+        'Total songs:': 'Total songs:',
+        'No songs found': 'No songs found',
+        'Edit Song': 'Edit Song',
+        'Song Name': 'Song Name',
+        'Song Name (English)': 'Song Name (English)',
+        'Singer': 'Singer',
+        'Singer (English)': 'Singer (English)',
+        'Song Type': 'Song Type',
+        'Duration': 'Duration',
+        'Cancel': 'Cancel',
+        'Save Changes': 'Save Changes',
+        'Editing will update all song entries with the same name and singer.': 'Editing will update all song entries with the same name and singer.',
+        'Song updated successfully!': 'Song updated successfully!',
+        'Song deleted successfully!': 'Song deleted successfully!',
+        'Are you sure you want to delete ALL entries of this song? This cannot be undone.': 'Are you sure you want to delete ALL entries of this song? This cannot be undone.',
+        'A song with this name and singer already exists. Do you want to merge them?': 'A song with this name and singer already exists. Do you want to merge them?',
         
         // Alert messages
         'Please enter some songs to import': 'Please enter some songs to import',
@@ -441,9 +484,30 @@ const translations = {
         'Save Settings': '設定を保存',
         'Go to Live Stream Page': 'ライブ配信ページへ',
         'Data Management': 'データ管理',
+        'Data': 'データ',
         'Export All Data': '全データをエクスポート',
         'Import Data': 'データをインポート',
         'Clear All Data': '全データを削除',
+        
+        // Song Management
+        'Song Management': '曲管理',
+        'Search songs...': '曲を検索...',
+        'Total songs:': '総曲数:',
+        'No songs found': '曲が見つかりません',
+        'Edit Song': '曲を編集',
+        'Song Name': '曲名',
+        'Song Name (English)': '曲名 (英語)',
+        'Singer': '歌手',
+        'Singer (English)': '歌手 (英語)',
+        'Song Type': '曲タイプ',
+        'Duration': '長さ',
+        'Cancel': 'キャンセル',
+        'Save Changes': '変更を保存',
+        'Editing will update all song entries with the same name and singer.': '同じ曲名と歌手のすべての曲エントリが更新されます。',
+        'Song updated successfully!': '曲が正常に更新されました！',
+        'Song deleted successfully!': '曲が正常に削除されました！',
+        'Are you sure you want to delete ALL entries of this song? This cannot be undone.': 'この曲的全データを削除してもよろしいですか？この操作は取り消せません。',
+        'A song with this name and singer already exists. Do you want to merge them?': '同じ曲名と歌手を持つ曲が既に存在します。統合しますか？',
         
         // Alert messages
         'Please enter some songs to import': 'インポートする曲を入力してください',

@@ -94,32 +94,32 @@
             }
             
             // If no preview URL but channel ID exists, load latest video
-            if (channelSettings.channelId) {
-                loadLatestVideo(channelSettings, container);
-                return;
-            }
+            // if (channelSettings.channelId) {
+            //     loadLatestVideo(channelSettings, container);
+            //     return;
+            // }
             
-            const channelName = channelSettings.channelName || 'YouTube Channel';
-            const channelUrl = channelSettings.channelUrl || '#';
+            // const channelName = channelSettings.channelName || 'YouTube Channel';
+            // const channelUrl = channelSettings.channelUrl || '#';
             
-            container.innerHTML = `
-                <div class="channel-info">
-                    <div class="channel-avatar">
-                        <i class="fab fa-youtube"></i>
-                    </div>
-                    <a href="${channelUrl}" target="_blank" class="channel-details">
-                        <h1>${channelName}</h1>
-                    </a>
-                </div>
+            // container.innerHTML = `
+            //     <div class="channel-info">
+            //         <div class="channel-avatar">
+            //             <i class="fab fa-youtube"></i>
+            //         </div>
+            //         <a href="${channelUrl}" target="_blank" class="channel-details">
+            //             <h1>${channelName}</h1>
+            //         </a>
+            //     </div>
 
-                <div class="video-grid" id="videoGrid">
-                    <div class="loading">
-                        <i class="fas fa-spinner"></i>
-                    </div>
-                </div>
-            `;
+            //     <div class="video-grid" id="videoGrid">
+            //         <div class="loading">
+            //             <i class="fas fa-spinner"></i>
+            //         </div>
+            //     </div>
+            // `;
             
-            loadVideos();
+            // loadVideos();
         }
         
         async function loadLatestVideo(channelSettings, container) {

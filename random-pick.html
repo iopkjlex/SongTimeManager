@@ -17,11 +17,8 @@
                 <span class="brand-icon"><i class="fas fa-music"></i></span>
                 <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
             </a>
-            <ul class="nav-menu">
-                <li><a href="songs-summary.html"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
-                <li><a href="random-pick.html" class="active"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
-                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;" aria-label="Toggle language"><i class="fas fa-language" aria-hidden="true"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+            <ul class="nav-menu" id="navMenu">
+                <!-- Navigation loaded from js/navigation.js -->
             </ul>
         </div>
     </nav>
@@ -51,6 +48,36 @@
                         <div class="dropdown-list" id="songTypeDropdown"></div>
                     </div>
                 </div>
+            </div>
+            <div class="input-group">
+                <div class="input-field">
+                    <label><span data-en="Exclude recently played:" data-ja="最近プレイした曲を除外:">Exclude recently played:</span></label>
+                    <div class="toggle-filters" style="gap: 8px; margin-top: 8px;">
+                        <div class="toggle-item" style="justify-content: flex-start;">
+                            <label class="toggle-switch">
+                                <input type="radio" name="excludePeriod" id="excludeThisWeek" value="week">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label" data-en="This Week" data-ja="今週">This Week</span>
+                        </div>
+                        <div class="toggle-item" style="justify-content: flex-start;">
+                            <label class="toggle-switch">
+                                <input type="radio" name="excludePeriod" id="excludeThisMonth" value="month">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label" data-en="This Month" data-ja="今月">This Month</span>
+                        </div>
+                        <div class="toggle-item" style="justify-content: flex-start;">
+                            <label class="toggle-switch">
+                                <input type="radio" name="excludePeriod" id="excludeThisYear" value="year">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label" data-en="This Year" data-ja="今年">This Year</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group" style="justify-content: flex-end;">
                 <button class="btn-pick" onclick="pickRandomSongs()">
                     <i class="fas fa-random"></i>
                     <span data-en="Pick Songs" data-ja="曲をピック">Pick Songs</span>
@@ -93,7 +120,13 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard!</div>
 
+    <script src="js/navigation.js"></script>
     <script src="js/app.js"></script>
     <script src="js/random-pick.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initNavigation('random-pick.html');
+        });
+    </script>
 </body>
 </html>

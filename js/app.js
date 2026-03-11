@@ -248,14 +248,15 @@ function getStats() {
 }
 
 /**
- * Export songs to CSV
+ * Export songs to CSV - follows IndexedDB structure
  */
 function exportToCSV() {
     const songs = getSongData();
-    let csv = 'Song Name,Singer,Date,Play Count\n';
+    let csv = 'Song Name (Japanese),Song Name (English),Singer (Japanese),Singer (English),Song Type,Duration,Date,Dates Count,Play Count\n';
     
     Object.values(songs).forEach(song => {
-        csv += `"${song.name}","${song.singer || ''}","${song.date || ''}",${song.count}\n`;
+        const datesCount = song.dates ? song.dates.length : (song.entries ? song.entries.length : 0);
+        csv += `"${song.name || ''}","${song.nameEnglish || ''}","${song.singer || ''}","${song.singerEnglish || ''}","${song.songType || ''}","${song.duration || ''}","${song.date || ''}",${datesCount},${song.count || 0}\n`;
     });
     
     // Add UTF-8 BOM for Japanese support
@@ -270,20 +271,26 @@ function exportToCSV() {
 }
 
 /**
- * Export songs to XLSX
+ * Export songs to XLSX - follows IndexedDB structure
  */
 function exportToXLSX() {
     const songs = getSongData();
     
-    // Prepare data for Excel
-    const data = [['Song Name', 'Singer', 'Date', 'Play Count']];
+    // Prepare data for Excel - include all fields from IndexedDB
+    const data = [['Song Name (Japanese)', 'Song Name (English)', 'Singer (Japanese)', 'Singer (English)', 'Song Type', 'Duration', 'Date', 'Dates Count', 'Play Count']];
     
     Object.values(songs).forEach(song => {
+        const datesCount = song.dates ? song.dates.length : (song.entries ? song.entries.length : 0);
         data.push([
-            song.name,
+            song.name || '',
+            song.nameEnglish || '',
             song.singer || '',
+            song.singerEnglish || '',
+            song.songType || '',
+            song.duration || '',
             song.date || '',
-            song.count
+            datesCount,
+            song.count || 0
         ]);
     });
     
@@ -446,6 +453,10 @@ const translations = {
         // Random Pick page
         'Pick Random Songs': 'Pick Random Songs',
         'Number of songs to pick:': 'Number of songs to pick:',
+        'Exclude recently played:': 'Exclude recently played:',
+        'This Week': 'This Week',
+        'This Month': 'This Month',
+        'This Year': 'This Year',
         'Filter by Singer:': 'Filter by Singer:',
         'Filter by Song Type:': 'Filter by Song Type:',
         'Pick Songs': 'Pick Songs',
@@ -459,7 +470,49 @@ const translations = {
         'Top 10 Most Played Songs': 'Top 10 Most Played Songs',
         'Top Singers': 'Top Singers',
         'Recently Added': 'Recently Added',
-        'Songs by Date': 'Songs by Date'
+        'Songs by Date': 'Songs by Date',
+        
+        // Storage page
+        'Storage': 'Storage',
+        'Storage - Song List Manager': 'Storage - Song List Manager',
+        'Upload Local Storage Data': 'Upload Local Storage Data',
+        'Name': 'Name',
+        'Remark (Optional)': 'Remark (Optional)',
+        'Data to Upload': 'Data to Upload',
+        'Song Data (songs)': 'Song Data (songs)',
+        'Settings (YouTube Channel, etc.)': 'Settings (YouTube Channel, etc.)',
+        'Song Sequences': 'Song Sequences',
+        'Custom Song Types': 'Custom Song Types',
+        'Upload to Storage': 'Upload to Storage',
+        'Stored Data List': 'Stored Data List',
+        'No stored data yet. Upload your first backup above.': 'No stored data yet. Upload your first backup above.',
+        'Restore Data': 'Restore Data',
+        'Are you sure you want to restore this data?': 'Are you sure you want to restore this data?',
+        'Warning: This will replace your current local storage data!': 'Warning: This will replace your current local storage data!',
+        'Select data to restore:': 'Select data to restore:',
+        'Restore': 'Restore',
+        'Delete Stored Data': 'Delete Stored Data',
+        'Are you sure you want to delete this stored data?': 'Are you sure you want to delete this stored data?',
+        'Warning: This action cannot be undone!': 'Warning: This action cannot be undone!',
+        'Delete': 'Delete',
+        'Operation completed successfully!': 'Operation completed successfully!',
+        'An error occurred!': 'An error occurred!',
+        'Please enter a name': 'Please enter a name',
+        'No data selected to upload': 'No data selected to upload',
+        'Data uploaded successfully!': 'Data uploaded successfully!',
+        'Failed to upload data': 'Failed to upload data',
+        'Data restored successfully!': 'Data restored successfully!',
+        'Failed to restore data': 'Failed to restore data',
+        'Data deleted successfully!': 'Data deleted successfully!',
+        'Song Data': 'Song Data',
+        'Settings': 'Settings',
+        'Download for Sharing': 'Download for Sharing',
+        'Import from JSON': 'Import from JSON',
+        'Data imported successfully!': 'Data imported successfully!',
+        'Invalid storage file format': 'Invalid storage file format',
+        'Failed to import:': 'Failed to import:',
+        'This will restore all available data to your local storage': 'This will restore all available data to your local storage',
+        'Data uploaded to server!': 'Data uploaded to server!'
     },
     ja: {
         // Navigation
@@ -596,6 +649,10 @@ const translations = {
         // Random Pick page
         'Pick Random Songs': '曲をランダム選択',
         'Number of songs to pick:': '選択する曲数:',
+        'Exclude recently played:': '最近プレイした曲を除外:',
+        'This Week': '今週',
+        'This Month': '今月',
+        'This Year': '今年',
         'Filter by Singer:': '歌手でフィルター:',
         'Filter by Song Type:': '曲タイプでフィルター:',
         'Pick Songs': '曲をピック',
@@ -609,7 +666,49 @@ const translations = {
         'Top 10 Most Played Songs': '再生回数トップ10',
         'Top Singers': '歌手ランキング',
         'Recently Added': '最近追加',
-        'Songs by Date': '日付別曲'
+        'Songs by Date': '日付別曲',
+        
+        // Storage page
+        'Storage': 'ストレージ',
+        'Storage - Song List Manager': 'ストレージ - 曲列表管理',
+        'Upload Local Storage Data': 'ローカルストレージデータをアップロード',
+        'Name': '名前',
+        'Remark (Optional)': '备注 (任意)',
+        'Data to Upload': 'アップロードするデータ',
+        'Song Data (songs)': '曲データ (曲)',
+        'Settings (YouTube Channel, etc.)': '設定 (YouTubeチャンネルなど)',
+        'Song Sequences': '曲シーケンス',
+        'Custom Song Types': 'カスタム曲タイプ',
+        'Upload to Storage': 'ストレージにアップロード',
+        'Stored Data List': '保存済みデータ一覧',
+        'No stored data yet. Upload your first backup above.': '保存されたデータがありません。上記で最初のバックアップをアップロードしてください。',
+        'Restore Data': 'データを復元',
+        'Are you sure you want to restore this data?': 'このデータを復元してもよろしいですか？',
+        'Warning: This will replace your current local storage data!': '警告: 現在のローカルストレージデータが置き換えられます！',
+        'Select data to restore:': '復元するデータを選択:',
+        'Restore': '復元',
+        'Delete Stored Data': '保存済みデータを削除',
+        'Are you sure you want to delete this stored data?': 'この保存済みデータを削除してもよろしいですか？',
+        'Warning: This action cannot be undone!': '警告: この操作は取り消せません！',
+        'Delete': '削除',
+        'Operation completed successfully!': '操作が正常に完了しました！',
+        'An error occurred!': 'エラーが発生しました！',
+        'Please enter a name': '名前を入力してください',
+        'No data selected to upload': 'アップロードするデータがありません',
+        'Data uploaded successfully!': 'データが正常にアップロードされました！',
+        'Failed to upload data': 'データのアップロードに失敗しました',
+        'Data restored successfully!': 'データが正常に復元されました！',
+        'Failed to restore data': 'データの復元に失敗しました',
+        'Data deleted successfully!': 'データが正常に削除されました！',
+        'Song Data': '曲データ',
+        'Settings': '設定',
+        'Download for Sharing': '共有用にダウンロード',
+        'Import from JSON': 'JSONからインポート',
+        'Data imported successfully!': 'データが正常にインポートされました！',
+        'Invalid storage file format': '無効なストレージファイル形式',
+        'Failed to import:': 'インポートに失敗しました:',
+        'This will restore all available data to your local storage': 'ローカルストレージのすべての利用可能なデータを復元します',
+        'Data uploaded to server!': 'サーバーにデータがアップロードされました！'
     }
 };
 

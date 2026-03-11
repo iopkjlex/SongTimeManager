@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Storage - Song List Manager" data-ja="ストレージ - 曲列表管理">Storage - Song List Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="lib/font-awesome.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-icon"><i class="fas fa-music"></i></span>
+                <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <!-- Navigation loaded from js/navigation.js -->
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="page-flag-header">
+            <h1><span class="header-icon"><i class="fas fa-hdd"></i></span> <span data-en="Storage" data-ja="ストレージ">Storage</span></h1>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div class="success-message" id="successMessage" role="status" aria-live="polite">
+            <i class="fas fa-check-circle" aria-hidden="true"></i> <span data-en="Operation completed successfully!" data-ja="操作が正常に完了しました！">Operation completed successfully!</span>
+        </div>
+
+        <div class="error-message" id="errorMessage" role="alert" aria-live="assertive">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i> <span data-en="An error occurred!" data-ja="エラーが発生しました！">An error occurred!</span>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="card" style="margin-bottom: 25px;">
+            <div class="card-header">
+                <h2><i class="fas fa-cloud-upload-alt"></i> <span data-en="Upload Local Storage Data" data-ja="ローカルストレージデータをアップロード">Upload Local Storage Data</span></h2>
+            </div>
+
+            <div class="form-group">
+                <label for="storageName">
+                    <i class="fas fa-tag"></i> <span data-en="Name" data-ja="名前">Name</span> *
+                </label>
+                <input type="text" id="storageName" 
+                       name="storageName"
+                       data-en-placeholder="Enter a name for this backup" 
+                       data-ja-placeholder="このバックアップの名前を入力"
+                       placeholder="Enter a name for this backup" required>
+            </div>
+
+            <div class="form-group">
+                <label for="storageRemark">
+                    <i class="fas fa-comment"></i> <span data-en="Remark (Optional)" data-ja="备注 (任意)">Remark (Optional)</span>
+                </label>
+                <input type="text" id="storageRemark" 
+                       name="storageRemark"
+                       data-en-placeholder="Add a remark or note" 
+                       data-ja-placeholder="备注やメモを追加"
+                       placeholder="Add a remark or note">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-database"></i> <span data-en="Data to Upload" data-ja="アップロードするデータ">Data to Upload</span>
+                </label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="uploadSongData" checked>
+                        <span data-en="Song Data (songs)" data-ja="曲データ (曲)">Song Data (songs)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="uploadSettings" checked>
+                        <span data-en="Settings (YouTube Channel, etc.)" data-ja="設定 (YouTubeチャンネルなど)">Settings (YouTube Channel, etc.)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="uploadSequences">
+                        <span data-en="Song Sequences" data-ja="曲シーケンス">Song Sequences</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="uploadCustomTypes">
+                        <span data-en="Custom Song Types" data-ja="カスタム曲タイプ">Custom Song Types</span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="uploadStorageData()">
+                    <i class="fas fa-upload"></i> <span data-en="Upload to Storage" data-ja="ストレージにアップロード">Upload to Storage</span>
+                </button>
+                <button class="btn" onclick="document.getElementById('importStorageInput').click()">
+                    <i class="fas fa-file-import"></i> <span data-en="Import from JSON" data-ja="JSONからインポート">Import from JSON</span>
+                </button>
+                <input type="file" id="importStorageInput" accept=".json" style="display: none;" onchange="importStorageFromFile(event)">
+            </div>
+        </div>
+
+        <!-- Storage List Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-list"></i> <span data-en="Stored Data List" data-ja="保存済みデータ一覧">Stored Data List</span></h2>
+            </div>
+
+            <div class="storage-list-container" id="storageListContainer">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p data-en="No stored data yet. Upload your first backup above, or import from JSON files." data-ja="保存されたデータがありません。最初のバックアップをアップロードするか、JSONファイルからインポートしてください。">No stored data yet. Upload your first backup above, or import from JSON files.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Restore Confirmation Modal -->
+        <div id="restoreModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-download"></i> <span data-en="Restore Data" data-ja="データを復元">Restore Data</span></h3>
+                    <button class="modal-close" onclick="closeRestoreModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p data-en="Are you sure you want to restore this data?" data-ja="このデータを復元してもよろしいですか？">Are you sure you want to restore this data?</p>
+                    <p style="color: #f39c12; font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <span data-en="Warning: This will replace your current local storage data!" data-ja="警告: 現在のローカルストレージデータが置き換えられます！">Warning: This will replace your current local storage data!</span>
+                    </p>
+                    <input type="hidden" id="restoreStorageId">
+                    <div id="restoreDataOptions" class="form-group" style="margin-top: 15px;">
+                        <label>
+                            <i class="fas fa-tasks"></i> <span data-en="Select data to restore:" data-ja="復元するデータを選択:">Select data to restore:</span>
+                        </label>
+                        <div class="checkbox-group" id="restoreOptions">
+                            <!-- Options will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeRestoreModal()">
+                        <i class="fas fa-times"></i> <span data-en="Cancel" data-ja="キャンセル">Cancel</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="confirmRestore()">
+                        <i class="fas fa-download"></i> <span data-en="Restore" data-ja="復元">Restore</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-trash"></i> <span data-en="Delete Stored Data" data-ja="保存済みデータを削除">Delete Stored Data</span></h3>
+                    <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p data-en="Are you sure you want to delete this stored data?" data-ja="この保存済みデータを削除してもよろしいですか？">Are you sure you want to delete this stored data?</p>
+                    <p style="color: #e74c3c; font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <span data-en="Warning: This action cannot be undone!" data-ja="警告: この操作は取り消せません！">Warning: This action cannot be undone!</span>
+                    </p>
+                    <input type="hidden" id="deleteStorageId">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeDeleteModal()">
+                        <i class="fas fa-times"></i> <span data-en="Cancel" data-ja="キャンセル">Cancel</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="confirmDelete()">
+                        <i class="fas fa-trash"></i> <span data-en="Delete" data-ja="削除">Delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/storage.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initNavigation('storage.html');
+        });
+    </script>
+</body>
+</html>

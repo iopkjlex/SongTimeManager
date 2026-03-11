@@ -118,6 +118,10 @@
             const singerInput = document.getElementById('singerFilter');
             const songTypeInput = document.getElementById('songTypeFilter');
             
+            // Get selected exclude period (radio buttons - only one can be selected)
+            const excludePeriod = document.querySelector('input[name="excludePeriod"]:checked');
+            const excludeValue = excludePeriod ? excludePeriod.value : null;
+            
             let count = parseInt(countInput.value) || 5;
             const selectedSinger = singerInput.value;
             const selectedType = songTypeInput.value;
@@ -133,6 +137,49 @@
             // Filter by song type if selected
             if (selectedType) {
                 songs = songs.filter(song => song.songType === selectedType);
+            }
+            
+            // Filter by exclude recently played (radio - only one period can be selected)
+            if (excludeValue) {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                const currentMonth = now.getMonth();
+                const currentDate = now.getDate();
+                
+                // Get start of current week (Sunday)
+                const startOfWeek = new Date(currentYear, currentMonth, currentDate - now.getDay());
+                startOfWeek.setHours(0, 0, 0, 0);
+                
+                // Get start of current month
+                const startOfMonth = new Date(currentYear, currentMonth, 1);
+                
+                // Get start of current year
+                const startOfYear = new Date(currentYear, 0, 1);
+                
+                songs = songs.filter(song => {
+                    // Get all dates from this song (from entries or dates array)
+                    const dates = song.entries?.map(e => e.date) || song.dates || [];
+                    
+                    // Check if any date falls in the selected period
+                    const hasRecentDate = dates.some(dateStr => {
+                        if (!dateStr) return false;
+                        try {
+                            const songDate = new Date(dateStr);
+                            if (isNaN(songDate.getTime())) return false;
+                            
+                            // Only one period can be selected (radio buttons)
+                            if (excludeValue === 'year' && songDate >= startOfYear) return true;
+                            if (excludeValue === 'month' && songDate >= startOfMonth) return true;
+                            if (excludeValue === 'week' && songDate >= startOfWeek) return true;
+                        } catch (e) {
+                            return false;
+                        }
+                        return false;
+                    });
+                    
+                    // EXCLUDE songs that have recent dates in the selected period
+                    return !hasRecentDate;
+                });
             }
             
             if (songs.length === 0) {

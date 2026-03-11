@@ -1,0 +1,17 @@
+{
+  "id": "storage_sample_001",
+  "name": "Sample Backup",
+  "remark": "This is a sample backup file showing the expected format",
+  "lastModified": "2026-03-11T00:00:00.000Z",
+  "data": {
+    "songData": {},
+    "settings": {
+      "channelUrl": "",
+      "channelId": null,
+      "channelName": "",
+      "previewUrl": ""
+    },
+    "sequences": {},
+    "customTypes": []
+  }
+}

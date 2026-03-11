@@ -17,11 +17,8 @@
                 <span class="brand-icon"><i class="fas fa-music"></i></span>
                 <span data-en="Song List Manager" data-ja="曲列表管理">Song List Manager</span>
             </a>
-            <ul class="nav-menu">
-                <li><a href="songs-summary.html"><i class="fas fa-list"></i> <span class="nav-text" data-en="Song Summary" data-ja="曲まとめ">Song Summary</span></a></li>
-                <li><a href="random-pick.html"><i class="fas fa-dice"></i> <span class="nav-text" data-en="Random Pick" data-ja="ランダムピック">Random Pick</span></a></li>
-                <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> <span class="nav-text" data-en="Settings" data-ja="設定">Settings</span></a></li>
-                <li><a href="#" class="lang-toggle" onclick="toggleLanguage(); return false;" aria-label="Toggle language"><i class="fas fa-language" aria-hidden="true"></i> <span class="nav-text" id="langLabel">EN</span></a></li>
+            <ul class="nav-menu" id="navMenu">
+                <!-- Navigation loaded from js/navigation.js -->
             </ul>
         </div>
     </nav>
@@ -371,8 +368,14 @@
         </div>
     </div>
 
+    <script src="js/navigation.js"></script>
     <script src="js/app.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/songs-summary.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initNavigation('settings.html');
+        });
+    </script>
 </body>
 </html>
